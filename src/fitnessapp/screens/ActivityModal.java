@@ -8,10 +8,8 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import fitnessapp.controllers.ActivityModalController;
 import java.awt.Font;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -60,28 +58,14 @@ public class ActivityModal extends javax.swing.JDialog {
         this.btnClose = btnClose;
     }
 
-    public JComboBox<String> getjComboBox1() {
-        return jComboBox1;
+
+    public JTextField getLabelActivity() {
+        return labelActivity;
     }
 
-    public void setjComboBox1(JComboBox<String> jComboBox1) {
-        this.jComboBox1 = jComboBox1;
-    }
 
-    public JTextField getjTextField1() {
-        return jTextField1;
-    }
-
-    public void setjTextField1(JTextField jTextField1) {
-        this.jTextField1 = jTextField1;
-    }
-
-    public JTextArea getTxtFDesc() {
-        return txtFDesc;
-    }
-
-    public void setTxtFDesc(JTextArea txtFDesc) {
-        this.txtFDesc = txtFDesc;
+    public JTextArea getDescriptionActivity() {
+        return descriptionActivity;
     }
     
     /**
@@ -92,31 +76,34 @@ public class ActivityModal extends javax.swing.JDialog {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         container = new javax.swing.JPanel();
         header = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         btnClose = new javax.swing.JButton();
         center = new javax.swing.JPanel();
         labelContainer = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        labelActivity = new javax.swing.JTextField();
         descContainer = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtFDesc = new javax.swing.JTextArea();
-        subscContainer = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel4 = new javax.swing.JLabel();
+        descriptionActivity = new javax.swing.JTextArea();
         footer = new javax.swing.JPanel();
         btnAdded = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
+        setMaximumSize(new java.awt.Dimension(446, 450));
+        setMinimumSize(new java.awt.Dimension(446, 450));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(400, 600));
+        setPreferredSize(new java.awt.Dimension(446, 450));
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
 
@@ -127,47 +114,85 @@ public class ActivityModal extends javax.swing.JDialog {
         header.setBackground(new java.awt.Color(220, 220, 220));
         header.setOpaque(false);
         header.setPreferredSize(new java.awt.Dimension(600, 60));
+        header.setLayout(new java.awt.BorderLayout());
+
+        jPanel1.setOpaque(false);
+        java.awt.GridBagLayout jPanel1Layout = new java.awt.GridBagLayout();
+        jPanel1Layout.columnWidths = new int[] {300, 50};
+        jPanel1.setLayout(jPanel1Layout);
+
+        jPanel3.setOpaque(false);
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Ajouter Activite");
 
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap())
+        );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 2;
+        jPanel1.add(jPanel3, gridBagConstraints);
+
+        jPanel2.setOpaque(false);
+        jPanel2.setPreferredSize(new java.awt.Dimension(100, 45));
+
         btnClose.setPreferredSize(new java.awt.Dimension(30, 30));
 
-        javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
-        header.setLayout(headerLayout);
-        headerLayout.setHorizontalGroup(
-            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
-                .addGap(122, 122, 122)
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
-                .addGap(46, 46, 46)
-                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 31, Short.MAX_VALUE)
-                .addGap(38, 38, 38))
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
-        headerLayout.setVerticalGroup(
-            headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(headerLayout.createSequentialGroup()
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        jPanel1.add(jPanel2, gridBagConstraints);
+
+        header.add(jPanel1, java.awt.BorderLayout.CENTER);
 
         container.add(header, java.awt.BorderLayout.PAGE_START);
 
         center.setBackground(new java.awt.Color(221, 221, 221));
         center.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 20, 0, 20));
         center.setOpaque(false);
-        center.setLayout(new java.awt.GridLayout(3, 1, 10, 0));
+        center.setLayout(new java.awt.GridBagLayout());
 
         labelContainer.setBackground(new java.awt.Color(255, 255, 255));
         labelContainer.setMaximumSize(new java.awt.Dimension(400, 146));
         labelContainer.setMinimumSize(new java.awt.Dimension(400, 146));
         labelContainer.setName(""); // NOI18N
         labelContainer.setOpaque(false);
-        labelContainer.setPreferredSize(new java.awt.Dimension(400, 146));
+        labelContainer.setPreferredSize(new java.awt.Dimension(400, 120));
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
@@ -179,100 +204,76 @@ public class ActivityModal extends javax.swing.JDialog {
         labelContainerLayout.setHorizontalGroup(
             labelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(labelContainerLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
                 .addGroup(labelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
+                    .addGroup(labelContainerLayout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 330, Short.MAX_VALUE))
+                    .addComponent(labelActivity, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE))
+                .addContainerGap())
         );
         labelContainerLayout.setVerticalGroup(
             labelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(labelContainerLayout.createSequentialGroup()
-                .addContainerGap(49, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, labelContainerLayout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14))
+                .addComponent(labelActivity, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(24, 24, 24))
         );
 
-        center.add(labelContainer);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        center.add(labelContainer, gridBagConstraints);
 
         descContainer.setBackground(new java.awt.Color(255, 255, 255));
         descContainer.setMaximumSize(new java.awt.Dimension(400, 146));
         descContainer.setMinimumSize(new java.awt.Dimension(400, 146));
         descContainer.setOpaque(false);
-        descContainer.setPreferredSize(new java.awt.Dimension(400, 146));
+        descContainer.setPreferredSize(new java.awt.Dimension(400, 200));
 
         jLabel3.setBackground(new java.awt.Color(0, 0, 0));
         jLabel3.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Descriptions");
 
-        txtFDesc.setColumns(20);
-        txtFDesc.setRows(5);
-        jScrollPane1.setViewportView(txtFDesc);
+        descriptionActivity.setColumns(20);
+        descriptionActivity.setLineWrap(true);
+        descriptionActivity.setRows(5);
+        jScrollPane1.setViewportView(descriptionActivity);
 
         javax.swing.GroupLayout descContainerLayout = new javax.swing.GroupLayout(descContainer);
         descContainer.setLayout(descContainerLayout);
         descContainerLayout.setHorizontalGroup(
             descContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
             .addGroup(descContainerLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(descContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE))
-                .addGap(0, 0, 0))
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         descContainerLayout.setVerticalGroup(
             descContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(descContainerLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addGap(0, 0, 0)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
 
-        center.add(descContainer);
-
-        subscContainer.setBackground(new java.awt.Color(255, 255, 255));
-        subscContainer.setMaximumSize(new java.awt.Dimension(400, 146));
-        subscContainer.setMinimumSize(new java.awt.Dimension(400, 146));
-        subscContainer.setOpaque(false);
-        subscContainer.setPreferredSize(new java.awt.Dimension(400, 146));
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jLabel4.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("Abonnements");
-
-        javax.swing.GroupLayout subscContainerLayout = new javax.swing.GroupLayout(subscContainer);
-        subscContainer.setLayout(subscContainerLayout);
-        subscContainerLayout.setHorizontalGroup(
-            subscContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subscContainerLayout.createSequentialGroup()
-                .addComponent(jLabel4)
-                .addContainerGap(273, Short.MAX_VALUE))
-            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        subscContainerLayout.setVerticalGroup(
-            subscContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subscContainerLayout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
-        );
-
-        center.add(subscContainer);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        center.add(descContainer, gridBagConstraints);
 
         container.add(center, java.awt.BorderLayout.CENTER);
 
         footer.setBackground(new java.awt.Color(221, 221, 221));
         footer.setOpaque(false);
 
+        btnAdded.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         btnAdded.setText("Ajouter");
 
         javax.swing.GroupLayout footerLayout = new javax.swing.GroupLayout(footer);
@@ -280,9 +281,9 @@ public class ActivityModal extends javax.swing.JDialog {
         footerLayout.setHorizontalGroup(
             footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(footerLayout.createSequentialGroup()
-                .addContainerGap(129, Short.MAX_VALUE)
+                .addContainerGap(131, Short.MAX_VALUE)
                 .addComponent(btnAdded, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(133, Short.MAX_VALUE))
+                .addContainerGap(131, Short.MAX_VALUE))
         );
         footerLayout.setVerticalGroup(
             footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -306,17 +307,17 @@ public class ActivityModal extends javax.swing.JDialog {
     private javax.swing.JPanel center;
     private javax.swing.JPanel container;
     private javax.swing.JPanel descContainer;
+    private javax.swing.JTextArea descriptionActivity;
     private javax.swing.JPanel footer;
     private javax.swing.JPanel header;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField labelActivity;
     private javax.swing.JPanel labelContainer;
-    private javax.swing.JPanel subscContainer;
-    private javax.swing.JTextArea txtFDesc;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,16 +7,15 @@ module FitnessApp {
     requires com.formdev.flatlaf;
     requires com.formdev.flatlaf.extras;
     requires com.formdev.flatlaf.fonts.roboto;
-    requires com.github.weisj.jsvg;
     requires AbsoluteLayout;
     requires datechooser;
     requires com.google.gson;
     requires swing.toast.notifications;
-    requires MaiFetch;
-    requires java.sql;
     requires org.xerial.sqlitejdbc;
-    requires java.desktop;
+    requires org.slf4j;
+    requires MaiFetch;
     requires java.net.http;
+    requires java.desktop;
+    requires com.github.weisj.jsvg;
     exports fitnessapp.models;
-     
 }

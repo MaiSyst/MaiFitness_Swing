@@ -8,6 +8,8 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import fitnessapp.models.ActivityModel;
+import fitnessapp.models.SubscriptionModel;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -59,19 +61,19 @@ public class MemberModal extends javax.swing.JDialog {
         this.btnClose = btnClose;
     }
 
-    public JComboBox<String> getComboxActivity() {
+    public JComboBox<ActivityModel> getComboxActivity() {
         return comboxActivity;
     }
 
-    public void setComboxActivity(JComboBox<String> comboxActivity) {
+    public void setComboxActivity(JComboBox<ActivityModel> comboxActivity) {
         this.comboxActivity = comboxActivity;
     }
 
-    public JComboBox<String> getComboxSubscription() {
+    public JComboBox<SubscriptionModel> getComboxSubscription() {
         return comboxSubscription;
     }
 
-    public void setComboxSubscription(JComboBox<String> comboxSubscription) {
+    public void setComboxSubscription(JComboBox<SubscriptionModel> comboxSubscription) {
         this.comboxSubscription = comboxSubscription;
     }
 
@@ -352,8 +354,6 @@ public class MemberModal extends javax.swing.JDialog {
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
         jLabel4.setText("Abonnements");
 
-        comboxSubscription.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         javax.swing.GroupLayout subscContainerLayout = new javax.swing.GroupLayout(subscContainer);
         subscContainer.setLayout(subscContainerLayout);
         subscContainerLayout.setHorizontalGroup(
@@ -385,7 +385,6 @@ public class MemberModal extends javax.swing.JDialog {
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Activites");
 
-        comboxActivity.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         comboxActivity.setPreferredSize(new java.awt.Dimension(95, 50));
 
         javax.swing.GroupLayout activityContainerLayout = new javax.swing.GroupLayout(activityContainer);
@@ -449,8 +448,8 @@ public class MemberModal extends javax.swing.JDialog {
     private javax.swing.JButton btnAdded;
     private javax.swing.JButton btnClose;
     private javax.swing.JPanel center;
-    private javax.swing.JComboBox<String> comboxActivity;
-    private javax.swing.JComboBox<String> comboxSubscription;
+    private javax.swing.JComboBox<ActivityModel> comboxActivity;
+    private javax.swing.JComboBox<SubscriptionModel> comboxSubscription;
     private javax.swing.JPanel container;
     private com.raven.datechooser.DateChooser dateChooser1;
     private javax.swing.JTextField datePicker;

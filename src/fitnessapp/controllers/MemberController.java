@@ -6,7 +6,10 @@ package fitnessapp.controllers;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import fitnessapp.screens.MemberModal;
+import com.maisyst.MaiFetch;
+import com.maisyst.utils.Authorization;
+import fitnessapp.utilities.API;
+import fitnessapp.utilities.Constants;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTable;
@@ -17,24 +20,31 @@ import javax.swing.JTextField;
  * @author orion90
  */
 public class MemberController {
-     private JButton removeCustomer;
-    private JButton addCustomer;
-    private JTable table;
-    private JTextField search;
-    private JFrame parent; 
 
-    public MemberController(JButton removeCustomer, JButton addCustomer, JTable table, JTextField search, JFrame parent) {
+    private final JButton removeCustomer;
+    private final JButton addCustomer;
+    private final JTable table;
+    private final JTextField search;
+    private final JFrame parent;
+    private final MaiFetch fetch;
+    public MemberController(
+            final JButton removeCustomer, 
+            final JButton addCustomer, 
+            final JTable table, final JTextField search, 
+            final JFrame parent,final String token) {
         this.removeCustomer = removeCustomer;
         this.addCustomer = addCustomer;
         this.table = table;
         this.search = search;
         this.parent = parent;
+        this.fetch=API.fetch(new Authorization(token));
         addCustomer.addActionListener(l -> onHandleShowModal());
-        addCustomer.setIcon(new FlatSVGIcon("fitnessapp/icons/plus.svg", 1f));
-        removeCustomer.setIcon(new FlatSVGIcon("fitnessapp/icons/trash.svg", 1f));
-        search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Rechercher votre salle...");
+        addCustomer.setIcon(new FlatSVGIcon(Constants.ICONS_PATH+"plus.svg", 1f));
+        removeCustomer.setIcon(new FlatSVGIcon(Constants.ICONS_PATH+"trash.svg", 1f));
+        search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Rechercher par prenom ou nom...");
     }
+
     private void onHandleShowModal() {
-        new MemberModalController().show(parent);
+        new MemberModalController(fetch).show(parent);
     }
 }

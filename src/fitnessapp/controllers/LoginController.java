@@ -60,7 +60,6 @@ public class LoginController {
 
         checkBoxStayConnected.addItemListener(l -> {
             isStayConnected = l.getStateChange() == ItemEvent.SELECTED;
-            System.out.println(isStayConnected);
         });
     }
 
@@ -83,10 +82,10 @@ public class LoginController {
                                 var query = "INSERT INTO auth(username,authToken,role) VALUES(?,?,?)";
                                 var pstmt = Database.getInstance().prepareStatement(query);
                                 pstmt.setString(1, auth.username());
-                                pstmt.setString(2, auth.authToken());
+                                pstmt.setString(2, auth.token());
                                 pstmt.setString(3, auth.role());
                                 pstmt.execute();
-                                
+
                             } catch (SQLException e) {
                                 System.out.println(e.getMessage());
                             }
@@ -116,14 +115,12 @@ public class LoginController {
                 });
 
             } catch (MaiException e) {
-                System.out.println(e.getMessage());
+                Notifications.getInstance().show(Notifications.Type.ERROR, 3000, "Serveur n'est pas disponible.");
+                loader.setVisible(false);
+               
             }
 
         }
-    }
-
-    private void addToken() {
-
     }
 
     private boolean isEmptyField() {

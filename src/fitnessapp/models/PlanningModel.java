@@ -4,9 +4,13 @@
  */
 package fitnessapp.models;
 
+
 /**
  *
  * @author orion90
+ *  
  */
-public record AuthResponse(String username,String token,String role,boolean isActive) {
+
+public record PlanningModel(String planningId,String day,String startTime,String endTime,String activityLabel,String roomName) {
+    
 }

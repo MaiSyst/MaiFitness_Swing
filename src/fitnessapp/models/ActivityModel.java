@@ -4,6 +4,8 @@
  */
 package fitnessapp.models;
 
+import java.util.UUID;
+
 /**
  *
  * @author orion90
@@ -11,6 +13,6 @@ package fitnessapp.models;
 [{"activityId":1,"label":"Strength","description":"Perd du poids ou les muscles","coach":[],"plannings":[]},{"activityId":2,"label":"Strength","description":"Perd du poids ou les muscles","coach":[],"plannings":[]},{"activityId":3,"label":"Strength","description":"Perd du poids ou les muscles","coach":[],"plannings":[]},{"activityId":4,"label":"Aerobic","description":"Augment ton rythme cardiaque","coach":[],"plannings":[]}]
 
  */
-public record ActivityModel(int activityId,String label,String description) {
+public record ActivityModel(String activityId,String label,String description) {
     
 }

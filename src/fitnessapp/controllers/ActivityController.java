@@ -21,20 +21,20 @@ import javax.swing.JTextField;
 import java.util.List;
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.Color;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JCheckBox;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import raven.toast.Notifications;
 
 /**
@@ -49,74 +49,108 @@ public class ActivityController {
     private final JButton removeActivity;
     private final JTable table;
     private final String flatStyle = FlatClientProperties.STYLE;
-    private final String token;
     private final Gson gson = new Gson();
+    private final JLabel numberActvitiesSelectJLabel;
     private final MaiFetch fetch;
     private final List<Integer> activityIdSelected = new ArrayList<>();
     private final Type activityListType = new TypeToken<List<ActivityModel>>() {
     }.getType();
 
-    public ActivityController(JFrame parent, JButton addActivity, JTextField search, JButton removeActivity, JTable table, String token) {
+    public ActivityController(JFrame parent, JButton addActivity, JTextField search, JButton removeActivity, JTable table, String token, JLabel numberActvitiesSelectJLabel) {
         this.addActivity = addActivity;
         this.parent = parent;
         this.removeActivity = removeActivity;
         this.search = search;
         this.table = table;
-        this.token = token;
-        Authorization authorization = new Authorization(token);
-
-        fetch = API.fetch(authorization);
+        this.numberActvitiesSelectJLabel = numberActvitiesSelectJLabel;
+        fetch = API.fetch(new Authorization(token));
         addActivity.addActionListener(l -> onHandleShowModal());
-        addActivity.setIcon(new FlatSVGIcon("fitnessapp/icons/plus.svg", 1f));
-        removeActivity.setIcon(new FlatSVGIcon("fitnessapp/icons/trash.svg", 1f));
-        search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Rechercher votre activite...");
-        dataRefreshTable();
-        table.addMouseListener(new MouseAdapter() {
+        addActivity.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "plus.svg", 1f));
+        removeActivity.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "trash.svg", 1f));
+        removeActivity.addActionListener(l -> activitySuppression());
+        search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Rechercher par label activité...");
+        search.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon(Constants.ICONS_PATH + "search.svg"));
+
+        search.addKeyListener(new KeyAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    showEditMode();
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                var word = search.getText().trim();
+                if (word.length() == 0) {
+                    dataRefreshTable();
+
+                } else {
+                    searchIt(word);
                 }
             }
 
+        });
+        dataRefreshTable();
+        table.addFocusListener(new FocusAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
-                if (e.getWhen() == 2000L) {
-                    deleteCurrentSelected();
+            public void focusLost(FocusEvent e) {
+                super.focusLost(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                changeSelectedItems();
+            }
+
+        });
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                changeSelectedItems();
+                if (e.getClickCount() == 2) {
+                    showEditMode();
                 }
             }
 
         });
         table.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent e) {
-                super.keyTyped(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                if (e.getKeyCode() == KeyEvent.VK_DELETE||e.getKeyCode() == KeyEvent.VK_CANCEL) {
-                    System.out.println("Deleted");
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                changeSelectedItems();
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+
+                super.keyPressed(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                changeSelectedItems();
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    activitySuppression();
                 }
             }
 
         });
     }
 
-    private void showEditMode() {
-        System.out.println("EditMode");
+    private void activitySuppression() {
+        var rows = table.getSelectedRows();
+        if (rows.length == 0) {
+            Notifications.getInstance().show(Notifications.Type.INFO, "Vous devriez selectionner d'abord la line a supprimer.");
+        } else {
+            var response = JOptionPane.showConfirmDialog(parent, "Etes-vous sure de supprimer?", "Suppression", JOptionPane.OK_CANCEL_OPTION);
+            if (response == JOptionPane.OK_OPTION) {
+                List<UUID> ids = new ArrayList<>();
+                for (int row : rows) {
+                    ids.add(UUID.fromString(table.getValueAt(row, 0).toString()));
+                }
+                removedOneOrMultiActivities(ids);
+            }
+        }
     }
 
-    private void deleteCurrentSelected() {
-        System.out.println("DeleteMode");
-    }
-
-    private void dataRefreshTable() {
+    private void removedOneOrMultiActivities(List<UUID> activitiesId) {
         try {
-            fetch.get(Constants.ACTIVITY_URL_PATH + "/fetchAll").then((result, status) -> {
+            Map<String, Object> body = new HashMap<>();
+            body.put("ids", activitiesId);
+            fetch.post(Constants.ACTIVITY_DELETE_MANY_URL_PATH, body).then((res, status) -> {
                 if (status == ResponseStatusCode.OK) {
-                    List<ActivityModel> models = gson.fromJson(result, activityListType);
-                    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
-                    tableModel.setRowCount(0);
-                    models.forEach(model
-                            -> tableModel.addRow(new String[]{String.valueOf(model.activityId()), model.label(), model.description()})
-                    );
+                    Notifications.getInstance().show(Notifications.Type.SUCCESS, "(" + activitiesId.size() + ") activités ont été supprimé.");
+                    dataRefreshTable();
+                } else {
+                    Notifications.getInstance().show(Notifications.Type.ERROR, "Erreur de suppression.");
+
                 }
             });
         } catch (MaiException e) {
@@ -124,8 +158,65 @@ public class ActivityController {
         }
     }
 
+    private void changeSelectedItems() {
+        if (table.getSelectedRows().length != 0) {
+            numberActvitiesSelectJLabel.setText("( " + table.getSelectedRows().length + " )");
+            numberActvitiesSelectJLabel.setForeground(Color.BLACK);
+
+        } else {
+            numberActvitiesSelectJLabel.setText("( 0 )");
+            numberActvitiesSelectJLabel.setForeground(Color.GRAY);
+        }
+    }
+
+    private void searchIt(String word) {
+        try {
+            DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+            fetch.get(Constants.ACTIVITY_SEARCH_URL_PATH + "query=" + word).then((result, status) -> {
+                if (status == ResponseStatusCode.OK) {
+                    tableModel.setRowCount(0);
+                    List<ActivityModel> models = gson.fromJson(result, activityListType);
+                    models.forEach(model
+                            -> tableModel.addRow(new String[]{String.valueOf(model.activityId()), model.label(), model.description()})
+                    );
+                }
+            });
+            changeSelectedItems();
+
+        } catch (MaiException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void showEditMode() {
+        var row = table.getSelectedRow();
+        var id = table.getValueAt(row, 0).toString();
+        var label = table.getValueAt(row, 1).toString();
+        var desc = table.getValueAt(row, 2).toString();
+        new ActivityModalController(fetch, table, id, label, desc, this::dataRefreshTable).show(parent);
+    }
+
+    private void dataRefreshTable() {
+        try {
+            fetch.get(Constants.ACTIVITY_FETCH_URL_PATH).then((result, status) -> {
+                if (status == ResponseStatusCode.OK) {
+                    List<ActivityModel> models = gson.fromJson(result, activityListType);
+                    DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+                    tableModel.setRowCount(0);
+                    models.forEach(model
+                            -> tableModel.addRow(new String[]{String.valueOf(model.activityId()), model.label(), model.description()})
+                    );
+
+                }
+            });
+            changeSelectedItems();
+        } catch (MaiException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     private void onHandleShowModal() {
-        new ActivityModalController().show(parent);
+        new ActivityModalController(fetch, table, this::dataRefreshTable).show(parent);
     }
 
 }

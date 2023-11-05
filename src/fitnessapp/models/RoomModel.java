@@ -4,9 +4,10 @@
  */
 package fitnessapp.models;
 
+import java.util.List;
+
 /**
  *
  * @author orion90
  */
-public record AuthResponse(String username,String token,String role,boolean isActive) {
-}
+public record RoomModel(String roomId,String roomName,List<PlanningModel>planning) {}

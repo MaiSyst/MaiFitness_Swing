@@ -24,8 +24,6 @@ public class Database {
     private Database(){
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:"+Constants.URL_DB);
-           
-            System.out.println("Connected");
         } catch (SQLException ex) {
             Logger.getLogger(ex.getMessage());
         }

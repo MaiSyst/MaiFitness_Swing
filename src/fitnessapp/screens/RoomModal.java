@@ -57,12 +57,8 @@ public class RoomModal extends javax.swing.JDialog {
     public void setBtnClose(JButton btnClose) {
         this.btnClose = btnClose;
     }
-    public JTextField getjTextField1() {
-        return jTextField1;
-    }
-
-    public void setjTextField1(JTextField jTextField1) {
-        this.jTextField1 = jTextField1;
+    public JTextField getInputRoomName() {
+        return inputRoomName;
     }
     
     /**
@@ -81,25 +77,26 @@ public class RoomModal extends javax.swing.JDialog {
         center = new javax.swing.JPanel();
         labelContainer = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        inputRoomName = new javax.swing.JTextField();
         footer = new javax.swing.JPanel();
         btnAdded = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setMinimumSize(new java.awt.Dimension(445, 415));
+        setMaximumSize(new java.awt.Dimension(400, 300));
+        setMinimumSize(new java.awt.Dimension(400, 300));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         setName("Ajouter Salle"); // NOI18N
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(445, 415));
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
 
         container.setBackground(new java.awt.Color(255, 255, 255));
         container.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 2, true));
-        container.setMaximumSize(new java.awt.Dimension(445, 415));
-        container.setMinimumSize(new java.awt.Dimension(445, 415));
-        container.setPreferredSize(new java.awt.Dimension(445, 415));
+        container.setMaximumSize(new java.awt.Dimension(400, 300));
+        container.setMinimumSize(new java.awt.Dimension(400, 300));
+        container.setPreferredSize(new java.awt.Dimension(400, 300));
         container.setLayout(new java.awt.BorderLayout());
 
         header.setBackground(new java.awt.Color(220, 220, 220));
@@ -117,11 +114,11 @@ public class RoomModal extends javax.swing.JDialog {
         headerLayout.setHorizontalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
-                .addGap(122, 122, 122)
+                .addGap(107, 107, 107)
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(46, 46, 46)
-                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(38, 38, 38))
+                .addGap(41, 41, 41)
+                .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 31, Short.MAX_VALUE)
+                .addGap(58, 58, 58))
         );
         headerLayout.setVerticalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -138,7 +135,7 @@ public class RoomModal extends javax.swing.JDialog {
         center.setBackground(new java.awt.Color(221, 221, 221));
         center.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 20, 0, 20));
         center.setOpaque(false);
-        center.setLayout(new java.awt.GridLayout(2, 1, 10, 0));
+        center.setLayout(new java.awt.GridLayout(0, 1, 10, 0));
 
         labelContainer.setBackground(new java.awt.Color(255, 255, 255));
         labelContainer.setMaximumSize(new java.awt.Dimension(400, 146));
@@ -158,7 +155,7 @@ public class RoomModal extends javax.swing.JDialog {
             labelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(labelContainerLayout.createSequentialGroup()
                 .addGroup(labelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+                    .addComponent(inputRoomName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                     .addGroup(labelContainerLayout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -167,10 +164,10 @@ public class RoomModal extends javax.swing.JDialog {
         labelContainerLayout.setVerticalGroup(
             labelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(labelContainerLayout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(inputRoomName, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
 
@@ -188,9 +185,9 @@ public class RoomModal extends javax.swing.JDialog {
         footerLayout.setHorizontalGroup(
             footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(footerLayout.createSequentialGroup()
-                .addContainerGap(130, Short.MAX_VALUE)
+                .addContainerGap(108, Short.MAX_VALUE)
                 .addComponent(btnAdded, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(133, Short.MAX_VALUE))
+                .addContainerGap(110, Short.MAX_VALUE))
         );
         footerLayout.setVerticalGroup(
             footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,9 +212,9 @@ public class RoomModal extends javax.swing.JDialog {
     private javax.swing.JPanel container;
     private javax.swing.JPanel footer;
     private javax.swing.JPanel header;
+    private javax.swing.JTextField inputRoomName;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel labelContainer;
     // End of variables declaration//GEN-END:variables
 }

@@ -15,7 +15,6 @@ import fitnessapp.screens.Dashboard;
 import fitnessapp.screens.Login;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Database;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import raven.toast.Notifications;
 
 /**
  *
@@ -50,10 +50,9 @@ public class FitnessApp {
         try {
             final var stmt = connection.createStatement();
             var rs = stmt.executeQuery("SELECT * FROM auth");
-
             for (var i = 0; i <= 100; i++) {
                 splashScreen.getProgressPercentage().setText(i + "%");
-                var delay = Math.round(Math.random() * 100);
+                var delay = Math.round(Math.random() * 80);
                 try {
                     Thread.sleep(delay);
                 } catch (InterruptedException e) {
@@ -94,7 +93,6 @@ public class FitnessApp {
         try {
             Map<String, Object> body = new HashMap<>();
             body.put("token", token);
-
             API.fetch().post("/auth/checkToken", body).then((result, status) -> {
                 if (status == ResponseStatusCode.OK) {
                     Gson gson = new Gson();
@@ -105,6 +103,7 @@ public class FitnessApp {
             });
             return auth.get() == null ? Optional.empty() : Optional.of(auth.get());
         } catch (MaiException e) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, "Désolé :(, Serveur n'est pas disponible");
             return Optional.empty();
         }
     }

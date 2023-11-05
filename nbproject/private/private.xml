@@ -3,16 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/controllers/LoginController.java</file>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/module-info.java</file>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/FitnessApp.java</file>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/utilities/Constants.java</file>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/utilities/API.java</file>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/models/AuthResponse.java</file>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/components/MaiSplashScreen.java</file>
+            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/controllers/MemberController.java</file>
+            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/controllers/CoachController.java</file>
+            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/controllers/MemberModalController.java</file>
+            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/controllers/PlanningModalController.java</file>
             <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/screens/Dashboard.java</file>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/utilities/Database.java</file>
-            <file>file:/home/orion90/Documents/StudioProjects/Thesis/FitnessApp/src/fitnessapp/controllers/ActivityController.java</file>
         </group>
     </open-files>
 </project-private>

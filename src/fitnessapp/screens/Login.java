@@ -7,6 +7,7 @@ package fitnessapp.screens;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import fitnessapp.controllers.LoginController;
+import fitnessapp.utilities.Constants;
 
 /**
  *
@@ -31,8 +32,8 @@ public class Login extends javax.swing.JFrame {
         inputPwd.putClientProperty(flatStyle, "showRevealButton:true");
         inputPwd.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Entrer votre mot de passe");
         inputText.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Entrer votre username");
-        inputText.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon("fitnessapp/icons/person.svg"));
-        inputPwd.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon("fitnessapp/icons/pwd.svg"));
+        inputText.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon(Constants.ICONS_PATH+"person.svg"));
+        inputPwd.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon(Constants.ICONS_PATH+"pwd.svg"));
         btnLogin.setIcon(new FlatSVGIcon("fitnessapp/icons/login.svg"));
         panelUndescore.putClientProperty(flatStyle, "arc:20");
        
@@ -155,10 +156,11 @@ public class Login extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel2)))
                 .addGap(49, 49, 49))
         );
 
