@@ -13,6 +13,7 @@ import com.maisyst.exceptions.MaiException;
 import com.maisyst.utils.Authorization;
 import com.maisyst.utils.enums.ResponseStatusCode;
 import fitnessapp.components.MaiCardMini;
+import fitnessapp.models.PlanningModel;
 import fitnessapp.models.RoomModel;
 import fitnessapp.models.RoomWithSubscribeModel;
 import fitnessapp.utilities.API;
@@ -65,8 +66,7 @@ public class RoomController {
             
         });
         addRoom.addActionListener(l -> onHandleShowModal());
-        //reFetchRoom();
-        reFetchRoomWithSubcribe();
+        reFetchRoom();
 
     }
 
@@ -77,7 +77,7 @@ public class RoomController {
                 fetch.delete(Constants.ROOM_DELETE_URL_PATH + roomId).then((result, status) -> {
                     if (status == ResponseStatusCode.OK) {
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Salle à été supprimé:");
-                        reFetchRoomWithSubcribe();
+                        reFetchRoom();
                     } else {
                         System.out.println(result);
                         Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Error de suppression:");
@@ -105,9 +105,11 @@ public class RoomController {
                     //Type planningListType=new TypeToken<List<PlanningModel>>(){}.getType();
                     List<RoomModel> models = gson.fromJson(result, roomListType);
                     for (var model : models) {
-                        MaiCardMini maiCardMini = new MaiCardMini(model.roomName(), "", model.roomId(),
+                        var desc=model.planning().size()>1?model.planning().size()+" Plannings":model.planning().size()+" Planning";
+                        MaiCardMini maiCardMini = new MaiCardMini(model.roomName(), desc, model.roomId(),
                                 args -> editRoom(args[0], args[1]),
-                                args -> deleteRoom(args[0])
+                                args -> deleteRoom(args[0]),
+                                args-> showDetailRoom(model.planning())
                         );
                         body.add(maiCardMini);
                         body.repaint();
@@ -125,10 +127,11 @@ public class RoomController {
     private void addToRoomPanel(String roomId, String roomName) {
         MaiCardMini maiCardMini = new MaiCardMini(
                 roomName,
-                "0 Abonnés",
+                "0 Plannings",
                 roomId,
                 args -> editRoom(args[0], args[1]),
-                args -> deleteRoom(args[0])
+                args -> deleteRoom(args[0]),
+                args-> showDetailRoom(new ArrayList<>())
         );
         body.add(maiCardMini);
         body.repaint();
@@ -160,33 +163,38 @@ public class RoomController {
        }
     }
     
-    private void reFetchRoomWithSubcribe() {
-        try {
-            fetch.get(Constants.ROOM_FETCH_SUBSC_URL_PATH).then((result, status) -> {
-                if (status == ResponseStatusCode.OK) {
-                    body.removeAll();
-                    final Gson gson = new Gson();
-                    final Type roomListType = new TypeToken<List<RoomWithSubscribeModel>>() {
-                    }.getType();
-                    dataList = gson.fromJson(result, roomListType);
-                    dataList.forEach(model -> {
-                        MaiCardMini maiCardMini = new MaiCardMini(
-                                model.roomName(),
-                                model.totalSubscribe() + " Abonnés",
-                                model.roomId(),
-                                args -> editRoom(args[0], args[1]),
-                                args -> deleteRoom(args[0]));
-                        body.add(maiCardMini);
-                        body.repaint();
-                    });
-                }
-            });
-        } catch (MaiException e) {
-            System.out.println(e.getMessage());
-        }
-
+//    private void reFetchRoomWithSubcribe() {
+//        try {
+//            fetch.get(Constants.ROOM_FETCH_SUBSC_URL_PATH).then((result, status) -> {
+//                if (status == ResponseStatusCode.OK) {
+//                    body.removeAll();
+//                    final Gson gson = new Gson();
+//                    final Type roomListType = new TypeToken<List<RoomWithSubscribeModel>>() {
+//                    }.getType();
+//                    dataList = gson.fromJson(result, roomListType);
+//                    dataList.forEach(model -> {
+//                        var plurial=model.totalSubscribe()>1?"s":"";
+//                        MaiCardMini maiCardMini = new MaiCardMini(
+//                                model.roomName(),
+//                                model.totalSubscribe() + " Planning"+plurial,
+//                                model.roomId(),
+//                                args -> editRoom(args[0], args[1]),
+//                                args -> deleteRoom(args[0]),
+//                                args-> showDetailRoom(args[0])
+//                        );
+//                        body.add(maiCardMini);
+//                        body.repaint();
+//                    });
+//                }
+//            });
+//        } catch (MaiException e) {
+//            System.out.println(e.getMessage());
+//        }
+//
+//    }
+    private void showDetailRoom(List<PlanningModel>plannings){
+        System.out.println(plannings);
     }
-
     private void onHandleShowModal() {
         new RoomModalController(fetch, args -> addToRoomPanel(args[0].toString(), args[1].toString())).show(parent);
     }

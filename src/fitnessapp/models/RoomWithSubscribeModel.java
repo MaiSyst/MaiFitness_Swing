@@ -3,9 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package fitnessapp.models;
-
-import java.util.List;
-
 /**
  *
  * @author orion90

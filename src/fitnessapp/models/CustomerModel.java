@@ -4,16 +4,8 @@
  */
 package fitnessapp.models;
 
-
 /**
  *
  * @author orion90
- *  
  */
-
-public record PlanningModel(String planningId,
-        String day,String startTime,
-        String endTime,
-        ActivityModel activity,RoomModel room) {
-    
-}
+public record CustomerModel(String customerId,String firstName,String lastName,String yearOfBirth,String address,boolean isActive) {}

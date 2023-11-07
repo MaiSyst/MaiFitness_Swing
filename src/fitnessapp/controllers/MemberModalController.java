@@ -13,6 +13,7 @@ import fitnessapp.models.ActivityModel;
 import fitnessapp.models.SubscriptionModel;
 import fitnessapp.screens.MemberModal;
 import fitnessapp.utilities.Constants;
+import fitnessapp.utilities.MaiFunctionCall;
 import fitnessapp.utilities.MaiUtils;
 import fitnessapp.utilities.MaiUtils.MaiComboxBoxCell;
 import java.lang.reflect.Type;
@@ -35,11 +36,27 @@ public class MemberModalController {
     private final MemberModal modal;
     private final MaiFetch fetch;
     private final Gson gson = new Gson();
+    private final MaiFunctionCall functionCall;
 
-    public MemberModalController(final MaiFetch fetch) {
+    public MemberModalController(final MaiFetch fetch,final MaiFunctionCall functionCall) {
         this.modal = new MemberModal();
         this.fetch = fetch;
+        this.functionCall=functionCall;
         modal.getBtnClose().addActionListener(l -> modal.dispose());
+        modal.getBtnAdded().addActionListener(l->addNewMember());
+        fetchActivities();
+        fetchSubscription();
+    }
+    public MemberModalController(final MaiFetch fetch,String memberId,String firstName,String lastName,String birthday,String address,final MaiFunctionCall functionCall) {
+        this.modal = new MemberModal();
+        this.fetch = fetch;
+        this.functionCall=functionCall;
+        modal.getBtnClose().addActionListener(l -> modal.dispose());
+        modal.getBtnAdded().addActionListener(l->editMember(memberId));
+        modal.getTxtFirstname().setText(firstName);
+        modal.getTxtLastname().setText(lastName);
+        modal.getTxtAddress().setText(address);
+        modal.getDatePicker().setText(birthday);
         fetchActivities();
         fetchSubscription();
     }
@@ -63,7 +80,11 @@ public class MemberModalController {
             System.out.println(e.getMessage());
         }
     }
-
+    private void clearInputText(){
+        modal.getTxtFirstname().setText("");
+        modal.getTxtLastname().setText("");
+        modal.getTxtAddress().setText("");
+    }
     private void addNewMember() {
         var firstName = modal.getTxtFirstname().getText();
         var lastName = modal.getTxtLastname().getText();
@@ -78,21 +99,56 @@ public class MemberModalController {
                 Map<String, Object> body = new HashMap<>();
                 body.put("firstName", firstName);
                 body.put("lastName", lastName);
-                body.put("birthdate", birthDay);
+                body.put("yearOfBirth", birthDay);
                 body.put("address", address);
                 fetch.post(
-                        Constants.CUSTOMER_ADD_URL_PATH+activity.activityId()+"/"+subscription.subscriptionId(),
+                        Constants.CUSTOMER_ADD_URL_PATH+subscription.subscriptionId()+"/"+activity.activityId(),
                         body).then((result, status) -> {
                     if (status == ResponseStatusCode.OK) {
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Un membre à été ajouté.");
-
+                        functionCall.invoked();
+                        clearInputText();
                     } else {
                         Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, result);
 
                     }
                 });
             } catch (MaiException e) {
-                Logger.getLogger(MemberModalController.class.getName(), e.getMessage())
+                Logger.getLogger(MemberModalController.class.getName(), e.getMessage());
+            }
+        }
+    }
+    
+    private void editMember(String memberId) {
+        var firstName = modal.getTxtFirstname().getText();
+        var lastName = modal.getTxtLastname().getText();
+        var birthDay = modal.getDatePicker().getText();
+        var address = modal.getTxtAddress().getText();
+        var activity = (ActivityModel) modal.getComboxActivity().getSelectedItem();
+        var subscription = (SubscriptionModel) modal.getComboxSubscription().getSelectedItem();
+        if (firstName.isBlank() || lastName.isBlank() || birthDay.isBlank() || address.isBlank()) {
+            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Les champs ne peut être accepté");
+        } else {
+            try {
+                Map<String, Object> body = new HashMap<>();
+                body.put("firstName", firstName);
+                body.put("lastName", lastName);
+                body.put("yearOfBirth", birthDay);
+                body.put("address", address);
+                fetch.post(
+                        Constants.CUSTOMER_UPDATE_URL_PATH+subscription.subscriptionId()+"/"+activity.activityId()+"/"+memberId,
+                        body).then((result, status) -> {
+                    if (status == ResponseStatusCode.OK) {
+                        Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Un membre à été mise-à-jour.");
+                        functionCall.invoked();
+                        clearInputText();
+                    } else {
+                        Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, result);
+
+                    }
+                });
+            } catch (MaiException e) {
+                Logger.getLogger(MemberModalController.class.getName(), e.getMessage());
             }
         }
     }

@@ -17,5 +17,6 @@ module FitnessApp {
     requires java.net.http;
     requires java.desktop;
     requires com.github.weisj.jsvg;
+    requires java.logging;
     exports fitnessapp.models;
 }

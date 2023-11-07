@@ -8,6 +8,7 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import fitnessapp.controllers.ActivityController;
 import fitnessapp.controllers.CoachController;
+import fitnessapp.controllers.DashboardController;
 import fitnessapp.controllers.MemberController;
 import fitnessapp.controllers.PlanningController;
 import fitnessapp.controllers.RoomController;
@@ -15,10 +16,7 @@ import fitnessapp.controllers.SubscriptionController;
 import fitnessapp.models.AuthResponse;
 import fitnessapp.utilities.Constants;
 import fitnessapp.utilities.Database;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
-import javax.swing.JFrame;
 import raven.toast.Notifications;
 
 /**
@@ -38,6 +36,7 @@ public class Dashboard extends javax.swing.JFrame {
     private final CoachController coachController;
     private final SubscriptionController subscriptionController;
     private final PlanningController planningController;
+    private final DashboardController controller;
     private final AuthResponse authResponse;
 
     public Dashboard(AuthResponse authResponse) {
@@ -75,6 +74,11 @@ public class Dashboard extends javax.swing.JFrame {
                 btnDeletePlanning, 
                 btnAddPlanning, tablePlanning,
                 numberPlanningSelected, authResponse.token());
+        controller=new DashboardController(suscribeActiveInfo,
+                numberSubscribeStandard, numberSubscribeGold, 
+                numberSubscribePrime, 
+                annualMontant, 
+                tableSubscribeActive, authResponse.token());
         signOut.addActionListener(l->{
             try{
                 var stmt=Database.getInstance().createStatement();
@@ -376,7 +380,7 @@ public class Dashboard extends javax.swing.JFrame {
         subscribeInfoMoney.setMaximumSize(new java.awt.Dimension(300, 150));
 
         jLabel6.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
-        jLabel6.setText("Montants annuels");
+        jLabel6.setText("Montants global");
 
         annualMontant.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
         annualMontant.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -420,12 +424,19 @@ public class Dashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Date Debut", "Date Fin"
+                "ID", "Date Debut", "Date Fin", "Nom du Client", "Abonnement", "Status"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
@@ -764,17 +775,18 @@ public class Dashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Actions", "ID", "Label", "Description"
+                "ID", "Prenom", "Nom", "Date de naissance", "Adresse", "Action"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tableMember.setRowHeight(45);
         jScrollPane3.setViewportView(tableMember);
 
         memberMain.add(jScrollPane3, java.awt.BorderLayout.CENTER);
@@ -990,9 +1002,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(coachHeaderLeftLayout.createSequentialGroup()
                 .addGroup(coachHeaderLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(numberCoachSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(coachHeaderLeftLayout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(btnDeleteCoach, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btnDeleteCoach, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
 
@@ -1038,7 +1048,7 @@ public class Dashboard extends javax.swing.JFrame {
         coachHeaderCenterLayout.setHorizontalGroup(
             coachHeaderCenterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(coachHeaderCenterLayout.createSequentialGroup()
-                .addComponent(inputSearchCoach, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                .addComponent(inputSearchCoach, javax.swing.GroupLayout.DEFAULT_SIZE, 569, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         coachHeaderCenterLayout.setVerticalGroup(

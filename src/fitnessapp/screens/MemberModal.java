@@ -150,6 +150,7 @@ public class MemberModal extends javax.swing.JDialog {
         btnAdded = new javax.swing.JButton();
 
         dateChooser1.setForeground(new java.awt.Color(0, 198, 45));
+        dateChooser1.setDateFormat("yyyy-MM-dd");
         dateChooser1.setTextRefernce(datePicker);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);

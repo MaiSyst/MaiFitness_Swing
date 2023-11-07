@@ -22,7 +22,8 @@ public class Constants {
     public static final String ACTIVITY_UPDATE_URL_PATH=ACTIVITY_URL_PATH+"/update/";
     //Customer
     public static final String CUSTOMER_URL_PATH="/customer";
-    public static final String CUSTOMER_ADD_URL_PATH="/customer/add/";
+    public static final String CUSTOMER_UPDATE_URL_PATH=CUSTOMER_URL_PATH+"/update/";
+    public static final String CUSTOMER_ADD_URL_PATH=CUSTOMER_URL_PATH+"/add/";
     public static final String CUSTOMER_FETCH_URL_PATH=CUSTOMER_URL_PATH+"/fetchAll";
     //Coach
     public static final String COACH_URL_PATH="/coach";
@@ -49,6 +50,10 @@ public class Constants {
     //Subscription
     public static String SUBSCRIPTION_URL_PATH="/subscription";
     public static String SUBSCRIPTION_FETCH_URL_PATH=SUBSCRIPTION_URL_PATH+"/fetchAll";
+    //Subscription
+    public static String SUBSCRIBE_URL_PATH="/subscribe";
+    public static String SUBSCRIBE_FETCH_URL_PATH=SUBSCRIBE_URL_PATH+"/fetchAll";
+    
     
     public static final String ICONS_PATH="fitnessapp/icons/";
     private static final File file=new File("");

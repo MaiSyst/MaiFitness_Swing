@@ -4,8 +4,10 @@
  */
 package fitnessapp.models;
 
+import java.util.List;
+
 /**
  *
  * @author orion90
  */
-public record SubscriptionModel(String subscriptionId, String label, double price, String type ) {}
+public record SubscriptionModel(String subscriptionId, String label, double price, String type,List<ActivityModel> activities) {}

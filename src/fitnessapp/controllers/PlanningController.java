@@ -170,7 +170,7 @@ public final class PlanningController {
                 if (query.equals("tout")) {
                     insertDataTable(dataList);
                 } else {
-                    var response = dataList.stream().filter(data -> data.activityLabel()
+                    var response = dataList.stream().filter(data -> data.activity().label()
                             .trim().toLowerCase().contains(query)).toList();
                     insertDataTable(response);
                 }
@@ -181,7 +181,7 @@ public final class PlanningController {
                 if (query.equals("tout")) {
                     insertDataTable(dataList);
                 } else {
-                    var response = dataList.stream().filter(data -> data.roomName()
+                    var response = dataList.stream().filter(data -> data.room().roomName()
                             .trim().toLowerCase().contains(query)).toList();
                     insertDataTable(response);
                 }
@@ -241,7 +241,7 @@ public final class PlanningController {
         }
     }
 
-    private final void fetchFilterActivities() {
+    private void fetchFilterActivities() {
         try {
             fetch.get(Constants.ACTIVITY_FETCH_URL_PATH).then((result, status) -> {
                 if (status == ResponseStatusCode.OK) {
@@ -260,10 +260,11 @@ public final class PlanningController {
         }
     }
 
-    private final void fetchFilterRoom() {
+    private void fetchFilterRoom() {
         try {
             fetch.get(Constants.ROOM_FETCH_SUBSC_URL_PATH).then((result, status) -> {
                 if (status == ResponseStatusCode.OK) {
+                    
                     final Type roomListType = new TypeToken<List<RoomWithSubscribeModel>>() {
                     }.getType();
                     List<RoomWithSubscribeModel> models = gson.fromJson(result, roomListType);
@@ -290,8 +291,8 @@ public final class PlanningController {
             MaiUtils.dateToFrench(model.day()),
             model.startTime(),
             model.endTime(),
-            model.activityLabel(),
-            model.roomName()
+            model.activity().label(),
+            model.room().roomName()
         })
         );
     }

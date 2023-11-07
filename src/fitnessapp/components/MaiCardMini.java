@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import fitnessapp.utilities.MaiCardButtonEvent;
+import java.awt.event.KeyAdapter;
 
 /**
  *
@@ -36,17 +37,19 @@ public final class MaiCardMini extends JPanel {
     private final String cardId;
     private final MaiCardButtonEvent<String> buttonEvent;
     private final MaiCardButtonEvent<String> buttonPressedEvent;
+    private final MaiCardButtonEvent<String> buttonShowEvent;
     private final String primaryColor;
     private final String lightColor;
     private final int arc = heightCard;
     private final int rand;
 
     public MaiCardMini(final String title, final String description, final String cardId, 
-            final MaiCardButtonEvent<String> buttonEvent, boolean isPressed) {
+            final MaiCardButtonEvent<String> buttonEvent,MaiCardButtonEvent<String> buttonShowEvent, boolean isPressed) {
         super();
         this.titleLabel = new JLabel(title);
         this.descriptionLabel = new JLabel(description);
         this.cardId = cardId;
+        this.buttonShowEvent=buttonShowEvent;
         if (isPressed) {
             this.buttonEvent = buttonEvent;
             this.buttonPressedEvent = buttonEvent;
@@ -70,13 +73,14 @@ public final class MaiCardMini extends JPanel {
 
     public MaiCardMini(final String title, final String description, final String cardId,
             final MaiCardButtonEvent<String> buttonEvent, 
-            final MaiCardButtonEvent<String> buttonPressedEvent) {
+            final MaiCardButtonEvent<String> buttonPressedEvent,final MaiCardButtonEvent<String>buttonShowEvent) {
         super();
         this.titleLabel = new JLabel(title);
         this.descriptionLabel = new JLabel(description);
         this.cardId = cardId;
         this.buttonEvent = buttonEvent;
         this.buttonPressedEvent = buttonPressedEvent;
+        this.buttonShowEvent=buttonShowEvent;
         this.rand = new Random().nextInt(Constants.COLORS.size());
         primaryColor = Constants.COLORS.get(rand);
         lightColor = primaryColor + "35";
@@ -86,11 +90,31 @@ public final class MaiCardMini extends JPanel {
         this.setLayout(new BorderLayout());
         leftComponent();
         centerComponent();
+        rightComponent();
         this.putClientProperty(flatStyle, "arc:" + arc + ";background:" + lightColor + ";");
         this.setPreferredSize(new Dimension(widthCard, heightCard));
         this.setSize(widthCard, heightCard);
     }
-
+    private void rightComponent(){
+        final JPanel right=new JPanel(new BorderLayout());
+        right.setOpaque(false);
+        JButton showDetail=new JButton(new FlatSVGIcon(Constants.ICONS_PATH+"show.svg"));
+        showDetail.setPreferredSize(new Dimension(heightCard, heightCard));
+        showDetail.setHorizontalAlignment(SwingConstants.CENTER);
+        showDetail.setSize(new Dimension(heightCard, heightCard));
+        showDetail.setPreferredSize(new Dimension(heightCard, heightCard));
+        showDetail.putClientProperty(flatStyle, "arc:" + heightCard + ";background:" + primaryColor + ";buttonType:borderless;focusedBorderColor:" + primaryColor);
+        right.add(showDetail, BorderLayout.CENTER);
+        this.add(right, BorderLayout.EAST);
+        showDetail.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                buttonShowEvent.onEvent(cardId);
+            }
+            
+        });
+    }
     private void centerComponent() {
         final JPanel center = new JPanel(new GridLayout(2, 1));
         center.add(titleLabel);
