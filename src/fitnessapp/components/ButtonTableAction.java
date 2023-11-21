@@ -4,6 +4,8 @@
  */
 package fitnessapp.components;
 
+import fitnessapp.utilities.MaiFunctionCall;
+
 /**
  *
  * @author orion90
@@ -13,10 +15,13 @@ public class ButtonTableAction extends javax.swing.JPanel {
     /**
      * Creates new form ButtonTableAction
      */
-    public ButtonTableAction() {
+    public ButtonTableAction(MaiFunctionCall callback) {
         initComponents();
+        if(callback!=null){
+            btnAction.addActionListener(l->callback.invoked());
+        }
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,24 +31,26 @@ public class ButtonTableAction extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        btnAction = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(177, 40));
-        setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        java.awt.FlowLayout flowLayout1 = new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0);
+        flowLayout1.setAlignOnBaseline(true);
+        setLayout(flowLayout1);
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show.png"))); // NOI18N
-        jButton1.setBorder(null);
-        jButton1.setContentAreaFilled(false);
-        jButton1.setPreferredSize(new java.awt.Dimension(40, 40));
-        jButton1.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show_hover.png"))); // NOI18N
-        jButton1.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show_selected.png"))); // NOI18N
-        jButton1.setRolloverSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show_selected.png"))); // NOI18N
-        jButton1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show_selected.png"))); // NOI18N
-        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(68, 0, -1, -1));
+        btnAction.setBackground(new java.awt.Color(255, 255, 255));
+        btnAction.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show.png"))); // NOI18N
+        btnAction.setBorder(null);
+        btnAction.setContentAreaFilled(false);
+        btnAction.setPreferredSize(new java.awt.Dimension(40, 40));
+        btnAction.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show_hover.png"))); // NOI18N
+        btnAction.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show_selected.png"))); // NOI18N
+        btnAction.setRolloverSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show_selected.png"))); // NOI18N
+        btnAction.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/show_selected.png"))); // NOI18N
+        add(btnAction);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnAction;
     // End of variables declaration//GEN-END:variables
 }

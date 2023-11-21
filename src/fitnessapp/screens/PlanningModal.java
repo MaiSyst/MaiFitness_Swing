@@ -88,6 +88,8 @@ public class PlanningModal extends javax.swing.JDialog {
         lblTitile.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTitile.setText("Plannings");
 
+        closeModal.setContentAreaFilled(false);
+
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
         header.setLayout(headerLayout);
         headerLayout.setHorizontalGroup(

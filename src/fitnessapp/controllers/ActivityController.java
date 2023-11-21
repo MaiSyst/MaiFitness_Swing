@@ -56,7 +56,9 @@ public class ActivityController {
     private final Type activityListType = new TypeToken<List<ActivityModel>>() {
     }.getType();
 
-    public ActivityController(JFrame parent, JButton addActivity, JTextField search, JButton removeActivity, JTable table, String token, JLabel numberActvitiesSelectJLabel) {
+    public ActivityController(final JFrame parent, final JButton addActivity, 
+            final JTextField search,final JButton removeActivity, JTable table,
+            final String token, final JLabel numberActvitiesSelectJLabel) {
         this.addActivity = addActivity;
         this.parent = parent;
         this.removeActivity = removeActivity;

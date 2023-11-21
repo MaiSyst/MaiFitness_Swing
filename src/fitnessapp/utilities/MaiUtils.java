@@ -10,12 +10,13 @@ import fitnessapp.models.SubscriptionModel;
 import java.awt.Component;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import javax.swing.JPasswordField;
 
 /**
  *
  * @author orion90
  */
-public class MaiUtils {
+public final class MaiUtils {
 
     public static final class MaiComboxBoxCell extends DefaultListCellRenderer {
 
@@ -35,8 +36,15 @@ public class MaiUtils {
         }
 
     }
-
-    public static String dateToEnglish(String day) {
+    public static final String getTextPassword(JPasswordField field) {
+        StringBuilder stringBuilder = new StringBuilder();
+        var passChars = field.getPassword();
+        for (int i = 0; i < passChars.length; i++) {
+            stringBuilder.append(passChars[i]);
+        }
+        return stringBuilder.toString();
+    }
+    public static final String dateToEnglish(String day) {
         return switch (day.toLowerCase()) {
             case "lundi" ->
                 "MONDAY";
@@ -57,7 +65,7 @@ public class MaiUtils {
         };
     }
 
-    public static String dateToFrench(String day) {
+    public static final String dateToFrench(String day) {
         return switch (day) {
             case "MONDAY" ->
                 "Lundi";

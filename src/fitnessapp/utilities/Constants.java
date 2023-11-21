@@ -22,9 +22,12 @@ public class Constants {
     public static final String ACTIVITY_UPDATE_URL_PATH=ACTIVITY_URL_PATH+"/update/";
     //Customer
     public static final String CUSTOMER_URL_PATH="/customer";
+    public static final String CUSTOMER_DELETE_URL_PATH=CUSTOMER_URL_PATH+"/delete";
     public static final String CUSTOMER_UPDATE_URL_PATH=CUSTOMER_URL_PATH+"/update/";
     public static final String CUSTOMER_ADD_URL_PATH=CUSTOMER_URL_PATH+"/add/";
     public static final String CUSTOMER_FETCH_URL_PATH=CUSTOMER_URL_PATH+"/fetchAll";
+    public static final String CUSTOMER_FETCH_ACCESS_ROOM_URL_PATH=CUSTOMER_URL_PATH+"/fetchAllByRoom";
+    public static final String CUSTOMER_CHECK_URL_PATH=CUSTOMER_URL_PATH+"/checkCustomer/";
     //Coach
     public static final String COACH_URL_PATH="/coach";
     public static final String COACH_ADD_URL_PATH=COACH_URL_PATH+"/add/";
@@ -33,6 +36,7 @@ public class Constants {
     public static final String COACH_DELETE_MANY_URL_PATH=COACH_URL_PATH+"/delete";
     //Room
     public static final String ROOM_URL_PATH="/room";
+    public static final String ROOM_FETCH_NO_MANAGER_URL_PATH=ROOM_URL_PATH+"/fetchRoomNoManager";
     public static final String ROOM_ADD_URL_PATH="/room/add";
     public static final String ROOM_FETCH_URL_PATH=ROOM_URL_PATH+"/fetchAll";
     public static final String ROOM_FETCH_SUBSC_URL_PATH=ROOM_URL_PATH+"/fetchWithTotalSubscribe";
@@ -46,6 +50,13 @@ public class Constants {
     public static final String PLANNING_FETCH_URL_PATH=PLANNING_URL_PATH+"/fetchAll";
     public static final String PLANNING_ADD_URL_PATH=PLANNING_URL_PATH+"/add/";
     
+    //USER
+    public static final String USER_URL_PATH="/auth";
+    public static final String USER_FETCH_URL_PATH=USER_URL_PATH+"/fetchAll";
+    public static final String USER_UPDATE_URL_PATH=USER_URL_PATH+"/update";
+    public static final String USER_DISABLE_ENABLE_ACCOUNT_URL_PATH=USER_URL_PATH+"/disableOrEnableAccount";
+    public static final String USER_ADD_URL_PATH=USER_URL_PATH+"/addUser";
+    public static final String USER_DELETE_MANY_URL_PATH=USER_URL_PATH+"/delete";
     
     //Subscription
     public static String SUBSCRIPTION_URL_PATH="/subscription";

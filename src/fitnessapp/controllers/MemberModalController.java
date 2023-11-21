@@ -10,10 +10,13 @@ import com.maisyst.MaiFetch;
 import com.maisyst.exceptions.MaiException;
 import com.maisyst.utils.enums.ResponseStatusCode;
 import fitnessapp.models.ActivityModel;
+import fitnessapp.models.RoomModel;
+import fitnessapp.models.RoomWithSubscribeModel;
 import fitnessapp.models.SubscriptionModel;
 import fitnessapp.screens.MemberModal;
 import fitnessapp.utilities.Constants;
 import fitnessapp.utilities.MaiFunctionCall;
+import fitnessapp.utilities.MaiState;
 import fitnessapp.utilities.MaiUtils;
 import fitnessapp.utilities.MaiUtils.MaiComboxBoxCell;
 import java.lang.reflect.Type;
@@ -22,35 +25,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JTextField;
 import raven.toast.Notifications;
 
 /**
  *
  * @author orion90
  */
-public class MemberModalController {
+public final class MemberModalController {
 
     private final MemberModal modal;
     private final MaiFetch fetch;
     private final Gson gson = new Gson();
     private final MaiFunctionCall functionCall;
-
-    public MemberModalController(final MaiFetch fetch,final MaiFunctionCall functionCall) {
+    private final MaiState maiState;
+    public MemberModalController(final MaiFetch fetch,final MaiFunctionCall functionCall,final MaiState maiState) {
         this.modal = new MemberModal();
         this.fetch = fetch;
         this.functionCall=functionCall;
+        this.maiState=maiState;
         modal.getBtnClose().addActionListener(l -> modal.dispose());
         modal.getBtnAdded().addActionListener(l->addNewMember());
         fetchActivities();
         fetchSubscription();
+        fetchRoom();
     }
-    public MemberModalController(final MaiFetch fetch,String memberId,String firstName,String lastName,String birthday,String address,final MaiFunctionCall functionCall) {
+    public MemberModalController(final MaiFetch fetch,String memberId,
+            String firstName,String lastName,String birthday,
+            String address,final MaiFunctionCall functionCall,final MaiState maiState) {
         this.modal = new MemberModal();
         this.fetch = fetch;
         this.functionCall=functionCall;
+        this.maiState=maiState;
         modal.getBtnClose().addActionListener(l -> modal.dispose());
         modal.getBtnAdded().addActionListener(l->editMember(memberId));
         modal.getTxtFirstname().setText(firstName);
@@ -61,7 +67,7 @@ public class MemberModalController {
         fetchSubscription();
     }
 
-    private final void fetchActivities() {
+    private void fetchActivities() {
         try {
             fetch.get(Constants.ACTIVITY_FETCH_URL_PATH).then((result, status) -> {
                 if (status == ResponseStatusCode.OK) {
@@ -92,7 +98,9 @@ public class MemberModalController {
         var address = modal.getTxtAddress().getText();
         var activity = (ActivityModel) modal.getComboxActivity().getSelectedItem();
         var subscription = (SubscriptionModel) modal.getComboxSubscription().getSelectedItem();
-        if (firstName.isBlank() || lastName.isBlank() || birthDay.isBlank() || address.isBlank()) {
+        var room=(RoomModel)modal.getComboxRoomModel().getSelectedItem();
+        if (firstName.isBlank() || lastName.isBlank() || birthDay.isBlank() ||
+                address.isBlank()||room==null||activity==null||subscription==null) {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Les champs ne peut être accepté");
         } else {
             try {
@@ -102,18 +110,20 @@ public class MemberModalController {
                 body.put("yearOfBirth", birthDay);
                 body.put("address", address);
                 fetch.post(
-                        Constants.CUSTOMER_ADD_URL_PATH+subscription.subscriptionId()+"/"+activity.activityId(),
+                        Constants.CUSTOMER_ADD_URL_PATH+subscription.type()+"/"+activity.activityId()+"/"+room.roomId(),
                         body).then((result, status) -> {
                     if (status == ResponseStatusCode.OK) {
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Un membre à été ajouté.");
                         functionCall.invoked();
+                        maiState.updateState();
                         clearInputText();
                     } else {
                         Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, result);
 
                     }
                 });
-            } catch (MaiException e) {
+            } 
+            catch (MaiException e) {
                 Logger.getLogger(MemberModalController.class.getName(), e.getMessage());
             }
         }
@@ -141,6 +151,7 @@ public class MemberModalController {
                     if (status == ResponseStatusCode.OK) {
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Un membre à été mise-à-jour.");
                         functionCall.invoked();
+                        maiState.updateState();
                         clearInputText();
                     } else {
                         Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, result);
@@ -153,7 +164,7 @@ public class MemberModalController {
         }
     }
 
-    private final void fetchSubscription() {
+    private void fetchSubscription() {
         try {
             fetch.get(Constants.SUBSCRIPTION_FETCH_URL_PATH).then((result, status) -> {
                 if (status == ResponseStatusCode.OK) {
@@ -172,7 +183,26 @@ public class MemberModalController {
             System.out.println(e.getMessage());
         }
     }
+    
+   private void fetchRoom() {
+        try {
+            fetch.get(Constants.ROOM_FETCH_URL_PATH).then((result, status) -> {
+                if (status == ResponseStatusCode.OK) {
+                    final Type roomListType = new TypeToken<List<RoomWithSubscribeModel>>() {
+                    }.getType();
+                    List<RoomWithSubscribeModel> models = gson.fromJson(result, roomListType);
+                    DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) modal.getComboxRoomModel().getModel();
+                    comboBoxModel.removeAllElements();
+                    models.forEach(model ->comboBoxModel.addElement(model));
+                    modal.getComboxRoomModel().setRenderer(new MaiUtils.MaiComboxBoxCell());
+                }
+            });
+        } catch (MaiException e) {
+            System.out.println(e.getMessage());
+        }
 
+    }
+    
     public void show(JFrame parent) {
         modal.setVisible(true);
     }

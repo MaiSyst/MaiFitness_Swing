@@ -9,6 +9,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import fitnessapp.models.ActivityModel;
+import fitnessapp.models.RoomModel;
 import fitnessapp.models.SubscriptionModel;
 import java.awt.Font;
 import javax.swing.JButton;
@@ -25,7 +26,6 @@ public class MemberModal extends javax.swing.JDialog {
     /**
      * Creates new form ActivityModal
      */
-    private final String styleCard = "arc:20;";
     private final String flatStyle = FlatClientProperties.STYLE;
 
     public MemberModal() {
@@ -37,7 +37,7 @@ public class MemberModal extends javax.swing.JDialog {
         this.setUndecorated(true);
         initComponents();
        
-        btnAdded.putClientProperty(flatStyle, "arc:20;background:@accentColor;foreground:#ffffff");
+        btnAdded.putClientProperty(flatStyle, "background:@accentColor;foreground:#ffffff");
         btnAdded.setIcon(new FlatSVGIcon("fitnessapp/icons/plus.svg"));
         container.putClientProperty(flatStyle, "arc:20;background:#fff");
         btnClose.setIcon(new FlatSVGIcon("fitnessapp/icons/close.svg"));
@@ -109,6 +109,10 @@ public class MemberModal extends javax.swing.JDialog {
         this.txtLastname = txtLastname;
     }
 
+    public JComboBox<RoomModel> getComboxRoomModel() {
+        return comboxRoomModel;
+    }
+
  
     
 
@@ -146,6 +150,9 @@ public class MemberModal extends javax.swing.JDialog {
         activityContainer = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         comboxActivity = new javax.swing.JComboBox<>();
+        activityContainer1 = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        comboxRoomModel = new javax.swing.JComboBox<>();
         footer = new javax.swing.JPanel();
         btnAdded = new javax.swing.JButton();
 
@@ -177,6 +184,7 @@ public class MemberModal extends javax.swing.JDialog {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Ajouter un Membre");
 
+        btnClose.setContentAreaFilled(false);
         btnClose.setPreferredSize(new java.awt.Dimension(30, 30));
 
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
@@ -208,7 +216,7 @@ public class MemberModal extends javax.swing.JDialog {
         center.setMinimumSize(new java.awt.Dimension(400, 620));
         center.setOpaque(false);
         center.setPreferredSize(new java.awt.Dimension(380, 620));
-        center.setLayout(new java.awt.GridLayout(6, 0));
+        center.setLayout(new java.awt.GridLayout(7, 0));
 
         firstnameContainer.setBackground(new java.awt.Color(255, 255, 255));
         firstnameContainer.setMaximumSize(new java.awt.Dimension(400, 146));
@@ -410,10 +418,45 @@ public class MemberModal extends javax.swing.JDialog {
 
         center.add(activityContainer);
 
+        activityContainer1.setBackground(new java.awt.Color(255, 255, 255));
+        activityContainer1.setMaximumSize(new java.awt.Dimension(400, 146));
+        activityContainer1.setMinimumSize(new java.awt.Dimension(400, 146));
+        activityContainer1.setOpaque(false);
+        activityContainer1.setPreferredSize(new java.awt.Dimension(350, 90));
+
+        jLabel9.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setText("Salle");
+
+        comboxRoomModel.setPreferredSize(new java.awt.Dimension(95, 50));
+
+        javax.swing.GroupLayout activityContainer1Layout = new javax.swing.GroupLayout(activityContainer1);
+        activityContainer1.setLayout(activityContainer1Layout);
+        activityContainer1Layout.setHorizontalGroup(
+            activityContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(comboxRoomModel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(activityContainer1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        activityContainer1Layout.setVerticalGroup(
+            activityContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(activityContainer1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jLabel9)
+                .addGap(0, 0, 0)
+                .addComponent(comboxRoomModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        center.add(activityContainer1);
+
         container.add(center, java.awt.BorderLayout.CENTER);
 
         footer.setBackground(new java.awt.Color(221, 221, 221));
         footer.setOpaque(false);
+        footer.setPreferredSize(new java.awt.Dimension(396, 60));
 
         btnAdded.setText("Ajouter");
 
@@ -429,7 +472,7 @@ public class MemberModal extends javax.swing.JDialog {
         footerLayout.setVerticalGroup(
             footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, footerLayout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAdded, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
@@ -444,12 +487,14 @@ public class MemberModal extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel activityContainer;
+    private javax.swing.JPanel activityContainer1;
     private javax.swing.JPanel addressContainer;
     private javax.swing.JPanel birthDateContainer;
     private javax.swing.JButton btnAdded;
     private javax.swing.JButton btnClose;
     private javax.swing.JPanel center;
     private javax.swing.JComboBox<ActivityModel> comboxActivity;
+    private javax.swing.JComboBox<RoomModel> comboxRoomModel;
     private javax.swing.JComboBox<SubscriptionModel> comboxSubscription;
     private javax.swing.JPanel container;
     private com.raven.datechooser.DateChooser dateChooser1;
@@ -464,6 +509,7 @@ public class MemberModal extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel lastnameContainer;
     private javax.swing.JPanel subscContainer;
     private javax.swing.JTextField txtAddress;

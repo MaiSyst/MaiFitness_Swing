@@ -8,11 +8,11 @@ import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.formdev.flatlaf.fonts.roboto.FlatRobotoFont;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
-import fitnessapp.models.ActivityModel;
-import fitnessapp.models.SubscriptionModel;
+import fitnessapp.models.RoomWithSubscribeModel;
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
@@ -20,15 +20,14 @@ import javax.swing.UIManager;
  *
  * @author orion90
  */
-public class MemberModal extends javax.swing.JDialog {
+public class UsersModal extends javax.swing.JDialog {
 
     /**
      * Creates new form ActivityModal
      */
-    private final String styleCard = "arc:20;";
     private final String flatStyle = FlatClientProperties.STYLE;
 
-    public MemberModal() {
+    public UsersModal() {
         FlatRobotoFont.install();
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 15));
         FlatMacLightLaf.registerCustomDefaultsSource("fitnessapp.properties");
@@ -37,11 +36,13 @@ public class MemberModal extends javax.swing.JDialog {
         this.setUndecorated(true);
         initComponents();
        
-        btnAdded.putClientProperty(flatStyle, "arc:20;background:@accentColor;foreground:#ffffff");
+        btnAdded.putClientProperty(flatStyle, "background:@accentColor;foreground:#ffffff");
         btnAdded.setIcon(new FlatSVGIcon("fitnessapp/icons/plus.svg"));
         container.putClientProperty(flatStyle, "arc:20;background:#fff");
         btnClose.setIcon(new FlatSVGIcon("fitnessapp/icons/close.svg"));
         btnClose.putClientProperty(flatStyle, "buttonType:roundRect;borderColor:#fff");
+        password.putClientProperty(flatStyle, "showRevealButton:true");
+        confPassword.putClientProperty(flatStyle, "showRevealButton:true");
         
     }
 
@@ -59,22 +60,6 @@ public class MemberModal extends javax.swing.JDialog {
 
     public void setBtnClose(JButton btnClose) {
         this.btnClose = btnClose;
-    }
-
-    public JComboBox<ActivityModel> getComboxActivity() {
-        return comboxActivity;
-    }
-
-    public void setComboxActivity(JComboBox<ActivityModel> comboxActivity) {
-        this.comboxActivity = comboxActivity;
-    }
-
-    public JComboBox<SubscriptionModel> getComboxSubscription() {
-        return comboxSubscription;
-    }
-
-    public void setComboxSubscription(JComboBox<SubscriptionModel> comboxSubscription) {
-        this.comboxSubscription = comboxSubscription;
     }
 
     public JTextField getDatePicker() {
@@ -109,8 +94,21 @@ public class MemberModal extends javax.swing.JDialog {
         this.txtLastname = txtLastname;
     }
 
- 
-    
+    public JComboBox<RoomWithSubscribeModel> getComboxRoomModel() {
+        return comboxRoomModel;
+    }
+
+    public JTextField getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public JPasswordField getPassword() {
+        return password;
+    }
+
+    public JPasswordField getConfPassword() {
+        return confPassword;
+    }
 
     
     /**
@@ -140,12 +138,18 @@ public class MemberModal extends javax.swing.JDialog {
         addressContainer = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         txtAddress = new javax.swing.JTextField();
-        subscContainer = new javax.swing.JPanel();
+        phoneContainer = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        comboxSubscription = new javax.swing.JComboBox<>();
-        activityContainer = new javax.swing.JPanel();
+        phoneNumber = new javax.swing.JTextField();
+        passwordContainer = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        comboxActivity = new javax.swing.JComboBox<>();
+        password = new javax.swing.JPasswordField();
+        passwordContainer1 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        confPassword = new javax.swing.JPasswordField();
+        roomContainer = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        comboxRoomModel = new javax.swing.JComboBox<>();
         footer = new javax.swing.JPanel();
         btnAdded = new javax.swing.JButton();
 
@@ -175,8 +179,9 @@ public class MemberModal extends javax.swing.JDialog {
 
         jLabel1.setFont(new java.awt.Font("sansserif", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("Ajouter un Membre");
+        jLabel1.setText("Ajouter un Gérant");
 
+        btnClose.setContentAreaFilled(false);
         btnClose.setPreferredSize(new java.awt.Dimension(30, 30));
 
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
@@ -208,7 +213,7 @@ public class MemberModal extends javax.swing.JDialog {
         center.setMinimumSize(new java.awt.Dimension(400, 620));
         center.setOpaque(false);
         center.setPreferredSize(new java.awt.Dimension(380, 620));
-        center.setLayout(new java.awt.GridLayout(6, 0));
+        center.setLayout(new java.awt.GridLayout(8, 0));
 
         firstnameContainer.setBackground(new java.awt.Color(255, 255, 255));
         firstnameContainer.setMaximumSize(new java.awt.Dimension(400, 146));
@@ -345,75 +350,140 @@ public class MemberModal extends javax.swing.JDialog {
 
         center.add(addressContainer);
 
-        subscContainer.setBackground(new java.awt.Color(255, 255, 255));
-        subscContainer.setMaximumSize(new java.awt.Dimension(400, 146));
-        subscContainer.setMinimumSize(new java.awt.Dimension(400, 146));
-        subscContainer.setOpaque(false);
-        subscContainer.setPreferredSize(new java.awt.Dimension(350, 90));
+        phoneContainer.setBackground(new java.awt.Color(255, 255, 255));
+        phoneContainer.setMaximumSize(new java.awt.Dimension(400, 146));
+        phoneContainer.setMinimumSize(new java.awt.Dimension(400, 146));
+        phoneContainer.setOpaque(false);
+        phoneContainer.setPreferredSize(new java.awt.Dimension(350, 90));
 
         jLabel4.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("Abonnements");
+        jLabel4.setText("Phone");
 
-        javax.swing.GroupLayout subscContainerLayout = new javax.swing.GroupLayout(subscContainer);
-        subscContainer.setLayout(subscContainerLayout);
-        subscContainerLayout.setHorizontalGroup(
-            subscContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(comboxSubscription, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(subscContainerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(252, Short.MAX_VALUE))
+        javax.swing.GroupLayout phoneContainerLayout = new javax.swing.GroupLayout(phoneContainer);
+        phoneContainer.setLayout(phoneContainerLayout);
+        phoneContainerLayout.setHorizontalGroup(
+            phoneContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(phoneContainerLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(phoneContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(phoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
-        subscContainerLayout.setVerticalGroup(
-            subscContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(subscContainerLayout.createSequentialGroup()
+        phoneContainerLayout.setVerticalGroup(
+            phoneContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(phoneContainerLayout.createSequentialGroup()
                 .addComponent(jLabel4)
                 .addGap(0, 0, 0)
-                .addComponent(comboxSubscription, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(phoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0))
         );
 
-        center.add(subscContainer);
+        center.add(phoneContainer);
 
-        activityContainer.setBackground(new java.awt.Color(255, 255, 255));
-        activityContainer.setMaximumSize(new java.awt.Dimension(400, 146));
-        activityContainer.setMinimumSize(new java.awt.Dimension(400, 146));
-        activityContainer.setOpaque(false);
-        activityContainer.setPreferredSize(new java.awt.Dimension(350, 90));
+        passwordContainer.setBackground(new java.awt.Color(255, 255, 255));
+        passwordContainer.setMaximumSize(new java.awt.Dimension(400, 146));
+        passwordContainer.setMinimumSize(new java.awt.Dimension(400, 146));
+        passwordContainer.setOpaque(false);
+        passwordContainer.setPreferredSize(new java.awt.Dimension(350, 90));
 
         jLabel7.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setText("Activites");
+        jLabel7.setText("Mot de passe");
 
-        comboxActivity.setPreferredSize(new java.awt.Dimension(95, 50));
-
-        javax.swing.GroupLayout activityContainerLayout = new javax.swing.GroupLayout(activityContainer);
-        activityContainer.setLayout(activityContainerLayout);
-        activityContainerLayout.setHorizontalGroup(
-            activityContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(comboxActivity, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(activityContainerLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(253, Short.MAX_VALUE))
+        javax.swing.GroupLayout passwordContainerLayout = new javax.swing.GroupLayout(passwordContainer);
+        passwordContainer.setLayout(passwordContainerLayout);
+        passwordContainerLayout.setHorizontalGroup(
+            passwordContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(passwordContainerLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(passwordContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
-        activityContainerLayout.setVerticalGroup(
-            activityContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(activityContainerLayout.createSequentialGroup()
+        passwordContainerLayout.setVerticalGroup(
+            passwordContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(passwordContainerLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addComponent(jLabel7)
                 .addGap(0, 0, 0)
-                .addComponent(comboxActivity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(70, Short.MAX_VALUE))
         );
 
-        center.add(activityContainer);
+        center.add(passwordContainer);
+
+        passwordContainer1.setBackground(new java.awt.Color(255, 255, 255));
+        passwordContainer1.setMaximumSize(new java.awt.Dimension(400, 146));
+        passwordContainer1.setMinimumSize(new java.awt.Dimension(400, 146));
+        passwordContainer1.setOpaque(false);
+        passwordContainer1.setPreferredSize(new java.awt.Dimension(350, 90));
+
+        jLabel10.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel10.setText("Confirme mot de passe");
+
+        javax.swing.GroupLayout passwordContainer1Layout = new javax.swing.GroupLayout(passwordContainer1);
+        passwordContainer1.setLayout(passwordContainer1Layout);
+        passwordContainer1Layout.setHorizontalGroup(
+            passwordContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(passwordContainer1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addGroup(passwordContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(confPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        passwordContainer1Layout.setVerticalGroup(
+            passwordContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(passwordContainer1Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jLabel10)
+                .addGap(0, 0, 0)
+                .addComponent(confPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(71, Short.MAX_VALUE))
+        );
+
+        center.add(passwordContainer1);
+
+        roomContainer.setBackground(new java.awt.Color(255, 255, 255));
+        roomContainer.setMaximumSize(new java.awt.Dimension(400, 146));
+        roomContainer.setMinimumSize(new java.awt.Dimension(400, 146));
+        roomContainer.setOpaque(false);
+        roomContainer.setPreferredSize(new java.awt.Dimension(350, 90));
+
+        jLabel9.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setText("Salle");
+
+        comboxRoomModel.setPreferredSize(new java.awt.Dimension(95, 50));
+
+        javax.swing.GroupLayout roomContainerLayout = new javax.swing.GroupLayout(roomContainer);
+        roomContainer.setLayout(roomContainerLayout);
+        roomContainerLayout.setHorizontalGroup(
+            roomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(comboxRoomModel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(roomContainerLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        roomContainerLayout.setVerticalGroup(
+            roomContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(roomContainerLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jLabel9)
+                .addGap(0, 0, 0)
+                .addComponent(comboxRoomModel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(70, Short.MAX_VALUE))
+        );
+
+        center.add(roomContainer);
 
         container.add(center, java.awt.BorderLayout.CENTER);
 
         footer.setBackground(new java.awt.Color(221, 221, 221));
         footer.setOpaque(false);
+        footer.setPreferredSize(new java.awt.Dimension(396, 60));
 
         btnAdded.setText("Ajouter");
 
@@ -429,7 +499,7 @@ public class MemberModal extends javax.swing.JDialog {
         footerLayout.setVerticalGroup(
             footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, footerLayout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAdded, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );
@@ -443,14 +513,13 @@ public class MemberModal extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel activityContainer;
     private javax.swing.JPanel addressContainer;
     private javax.swing.JPanel birthDateContainer;
     private javax.swing.JButton btnAdded;
     private javax.swing.JButton btnClose;
     private javax.swing.JPanel center;
-    private javax.swing.JComboBox<ActivityModel> comboxActivity;
-    private javax.swing.JComboBox<SubscriptionModel> comboxSubscription;
+    private javax.swing.JComboBox<RoomWithSubscribeModel> comboxRoomModel;
+    private javax.swing.JPasswordField confPassword;
     private javax.swing.JPanel container;
     private com.raven.datechooser.DateChooser dateChooser1;
     private javax.swing.JTextField datePicker;
@@ -458,14 +527,21 @@ public class MemberModal extends javax.swing.JDialog {
     private javax.swing.JPanel footer;
     private javax.swing.JPanel header;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel lastnameContainer;
-    private javax.swing.JPanel subscContainer;
+    private javax.swing.JPasswordField password;
+    private javax.swing.JPanel passwordContainer;
+    private javax.swing.JPanel passwordContainer1;
+    private javax.swing.JPanel phoneContainer;
+    private javax.swing.JTextField phoneNumber;
+    private javax.swing.JPanel roomContainer;
     private javax.swing.JTextField txtAddress;
     private javax.swing.JTextField txtFirstname;
     private javax.swing.JTextField txtLastname;

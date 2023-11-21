@@ -4,7 +4,6 @@
  */
 package fitnessapp.controllers;
 
-import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -17,6 +16,7 @@ import fitnessapp.models.PlanningModel;
 import fitnessapp.models.RoomWithSubscribeModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
+import fitnessapp.utilities.MaiState;
 import fitnessapp.utilities.MaiUtils;
 import java.awt.Color;
 import java.awt.event.ItemEvent;
@@ -54,6 +54,7 @@ public final class PlanningController {
     private final JLabel numberPlanningSelectJLabel;
     private final JFrame parent;
     private final MaiFetch fetch;
+    private final MaiState maiState;
     private final Gson gson = new Gson();
     private final Type listPlannings = new TypeToken<List<PlanningModel>>() {
     }.getType();
@@ -76,7 +77,7 @@ public final class PlanningController {
             final JButton addNewPlanning,
             final JTable tablePlanning,
             final JLabel numberPlanningSelectJLabel,
-            final String token) {
+            final String token, final MaiState maiState) {
 
         this.filterDay = filterDay;
         this.filterActivity = filterActivity;
@@ -85,15 +86,19 @@ public final class PlanningController {
         this.addNewPlanning = addNewPlanning;
         this.removePlannig = removePlannig;
         this.tablePlanning = tablePlanning;
+        this.maiState = maiState;
         this.numberPlanningSelectJLabel = numberPlanningSelectJLabel;
-        this.addNewPlanning.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "plus.svg"));
-        this.removePlannig.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "trash.svg"));
+
         this.resetAction.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "reload.svg"));
 
         this.parent = parent;
         this.fetch = API.fetch(new Authorization(token));
-        addNewPlanning.addActionListener(l -> showModal());
-        removePlannig.addActionListener(l->activitySuppression());
+        if (addNewPlanning != null && removePlannig != null) {
+            this.addNewPlanning.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "plus.svg"));
+            this.removePlannig.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "trash.svg"));
+            addNewPlanning.addActionListener(l -> showModal());
+            removePlannig.addActionListener(l -> activitySuppression());
+        }
         refreshDataTable();
         tablePlanning.addMouseListener(new MouseAdapter() {
             @Override
@@ -131,31 +136,31 @@ public final class PlanningController {
             }
 
         });
-        filterActivity.addItemListener(l->{
-            if(l.getStateChange()==ItemEvent.SELECTED){
-                filterTable(l.getItem().toString().trim().toLowerCase(),FilterTable.ACTIVITY);
+        filterActivity.addItemListener(l -> {
+            if (l.getStateChange() == ItemEvent.SELECTED) {
+                filterTable(l.getItem().toString().trim().toLowerCase(), FilterTable.ACTIVITY);
             }
         });
-        filterRoom.addItemListener(l->{
-            if(l.getStateChange()==ItemEvent.SELECTED){
-                filterTable(l.getItem().toString().trim().toLowerCase(),FilterTable.ROOM);
+        filterRoom.addItemListener(l -> {
+            if (l.getStateChange() == ItemEvent.SELECTED) {
+                filterTable(l.getItem().toString().trim().toLowerCase(), FilterTable.ROOM);
             }
         });
-        filterDay.addItemListener(l->{
-            if(l.getStateChange()==ItemEvent.SELECTED){
-                filterTable(l.getItem().toString().trim().toLowerCase(),FilterTable.DAY);
+        filterDay.addItemListener(l -> {
+            if (l.getStateChange() == ItemEvent.SELECTED) {
+                filterTable(l.getItem().toString().trim().toLowerCase(), FilterTable.DAY);
             }
         });
-        resetAction.addActionListener(l->filterTable("reset",FilterTable.RESET));
+        resetAction.addActionListener(l -> filterTable("reset", FilterTable.RESET));
     }
 
-    private void filterTable(final String query,final FilterTable filter) {
+    private void filterTable(final String query, final FilterTable filter) {
         switch (filter) {
             case DAY -> {
                 filterActivity.setSelectedIndex(0);
                 filterRoom.setSelectedIndex(0);
-               
-                if (query.equals("tout")) {
+
+                if (query.equals("tous les jours")) {
                     insertDataTable(dataList);
                 } else {
                     var response = dataList.stream().filter(data
@@ -167,7 +172,7 @@ public final class PlanningController {
             case ACTIVITY -> {
                 filterRoom.setSelectedIndex(0);
                 filterDay.setSelectedIndex(0);
-                if (query.equals("tout")) {
+                if (query.equals("toutes les activites")) {
                     insertDataTable(dataList);
                 } else {
                     var response = dataList.stream().filter(data -> data.activity().label()
@@ -178,7 +183,7 @@ public final class PlanningController {
             case ROOM -> {
                 filterActivity.setSelectedIndex(0);
                 filterDay.setSelectedIndex(0);
-                if (query.equals("tout")) {
+                if (query.equals("toutes les salles")) {
                     insertDataTable(dataList);
                 } else {
                     var response = dataList.stream().filter(data -> data.room().roomName()
@@ -210,7 +215,6 @@ public final class PlanningController {
             }
         }
     }
-
 
     private void removedOneOrMultiPlannings(List<String> planningId) {
         try {
@@ -249,7 +253,7 @@ public final class PlanningController {
                     }.getType();
                     List<ActivityModel> models = gson.fromJson(result, activityListType);
                     filterActivity.removeAllItems();
-                    filterActivity.addItem("Tout");
+                    filterActivity.addItem("Toutes les activites");
                     models.forEach(model
                             -> filterActivity.addItem(model.label())
                     );
@@ -264,12 +268,12 @@ public final class PlanningController {
         try {
             fetch.get(Constants.ROOM_FETCH_SUBSC_URL_PATH).then((result, status) -> {
                 if (status == ResponseStatusCode.OK) {
-                    
+
                     final Type roomListType = new TypeToken<List<RoomWithSubscribeModel>>() {
                     }.getType();
                     List<RoomWithSubscribeModel> models = gson.fromJson(result, roomListType);
                     filterRoom.removeAllItems();
-                    filterRoom.addItem("Tout");
+                    filterRoom.addItem("Toutes les salles");
                     models.forEach(model
                             -> filterRoom.addItem(model.roomName())
                     );
@@ -313,7 +317,7 @@ public final class PlanningController {
     }
 
     private void showModal() {
-        new PlanningModalController(parent, fetch, this::refreshDataTable
+        new PlanningModalController(parent, fetch, this::refreshDataTable, maiState
         ).show();
     }
 
@@ -321,7 +325,8 @@ public final class PlanningController {
         new PlanningModalController(parent, fetch, planningId,
                 day, timeStart,
                 timeEnd, activity, roomName,
-                this::refreshDataTable
+                this::refreshDataTable,
+                maiState
         ).show();
     }
 }

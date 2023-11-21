@@ -8,5 +8,5 @@ package fitnessapp.models;
  *
  * @author orion90
  */
-public record AuthResponse(String username,String token,String role,boolean isActive) {
+public record AuthResponse(String username,String token,String roomId,String role,boolean isActive) {
 }

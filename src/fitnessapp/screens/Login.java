@@ -51,14 +51,14 @@ public class Login extends javax.swing.JFrame {
 
         loader = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         container = new javax.swing.JPanel();
         leftSide = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         rightSide = new javax.swing.JPanel();
         headerTitle = new javax.swing.JPanel();
@@ -82,12 +82,25 @@ public class Login extends javax.swing.JFrame {
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        loader.setBackground(new java.awt.Color(255, 255, 255));
         loader.setOpaque(false);
         loader.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/loader.gif"))); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/loader1.gif"))); // NOI18N
         loader.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 0, 420, 160));
+
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("RESTER TOUJOURS EN FORME");
+        loader.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 130, -1, -1));
+
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("****");
+        loader.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 130, -1, -1));
+
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("****");
+        loader.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 130, -1, 18));
 
         getContentPane().add(loader, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -97,7 +110,7 @@ public class Login extends javax.swing.JFrame {
         container.setPreferredSize(new java.awt.Dimension(1024, 512));
         container.setLayout(new java.awt.BorderLayout());
 
-        leftSide.setBackground(new java.awt.Color(130, 185, 0));
+        leftSide.setBackground(new java.awt.Color(255, 255, 255));
         leftSide.setPreferredSize(new java.awt.Dimension(600, 100));
         leftSide.setLayout(new java.awt.BorderLayout());
 
@@ -108,16 +121,8 @@ public class Login extends javax.swing.JFrame {
         jPanel5.setOpaque(false);
         jPanel5.setPreferredSize(new java.awt.Dimension(100, 200));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/g2.png"))); // NOI18N
-
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("RESTER TOUJOURS EN FORME");
-
-        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel5.setText("****");
-
-        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("****");
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/emfTitle.png"))); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("sansserif", 0, 12)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(245, 245, 245));
@@ -129,39 +134,23 @@ public class Login extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap(160, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addGap(140, 140, 140))
+                        .addComponent(jLabel7)
+                        .addGap(229, 229, 229))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel7)
-                                .addGap(229, 229, 229))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel6)
-                                .addGap(0, 0, Short.MAX_VALUE))))))
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 591, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(199, 199, 199))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel5)
-                        .addComponent(jLabel2)))
-                .addGap(49, 49, 49))
+                .addGap(83, 83, 83))
         );
 
         leftSide.add(jPanel5, java.awt.BorderLayout.PAGE_START);
@@ -241,7 +230,7 @@ public class Login extends javax.swing.JFrame {
         jPanel1.setOpaque(false);
 
         checkBoxStayConnected.setForeground(new java.awt.Color(0, 0, 0));
-        checkBoxStayConnected.setText("Rester connecté pendant 1mois.");
+        checkBoxStayConnected.setText("Se souvenir de moi");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

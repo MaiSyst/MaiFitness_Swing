@@ -5,16 +5,20 @@
 package fitnessapp.controllers;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.maisyst.MaiFetch;
 import com.maisyst.exceptions.MaiException;
+import com.maisyst.utils.enums.ResponseStatusCode;
 import static com.maisyst.utils.enums.ResponseStatusCode.FORBIDDEN;
 import static com.maisyst.utils.enums.ResponseStatusCode.OK;
 import fitnessapp.models.RoomWithSubscribeModel;
+import fitnessapp.models.UserModel;
 import fitnessapp.screens.RoomModal;
 import fitnessapp.utilities.Constants;
-import fitnessapp.utilities.MaiFunctionCall;
 import fitnessapp.utilities.MaiFunctionCallWithArgs;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.JFrame;
 import raven.toast.Notifications;
@@ -45,7 +49,7 @@ public class RoomModalController {
         this.roomModal.getBtnClose().addActionListener(l -> roomModal.dispose());
         roomModal.getBtnAdded().addActionListener(l -> editRoom(roomId));
     }
-
+    
     private void addNewRoom() {
         final var roomName = roomModal.getInputRoomName().getText();
         if (roomName.isBlank()) {
@@ -54,6 +58,7 @@ public class RoomModalController {
             try {
                 final Map<String, Object> body = new HashMap<>();
                 body.put("roomName", roomName);
+                
                 fetch.post(Constants.ROOM_ADD_URL_PATH,body).then((result, status) -> {
                     switch (status) {
                         case OK -> {

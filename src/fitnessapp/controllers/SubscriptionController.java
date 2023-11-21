@@ -86,15 +86,15 @@ public class SubscriptionController {
         switch (type) {
             case "PRIME"->{
                 this.primeMonth.setText(month);
-                this.primePrice.setText(String.valueOf(price));
+                this.primePrice.setText(String.valueOf(price)+"FCFA");
             }
             case "STANDARD"->{
                 this.standardMonth.setText(month);
-                this.standardPrice.setText(String.valueOf(price));
+                this.standardPrice.setText(String.valueOf(price)+"FCFA");
             }
             default->{
                 this.goldMonth.setText(month);
-                this.goldPrice.setText(String.valueOf(price));
+                this.goldPrice.setText(String.valueOf(price)+"FCFA");
             }
         }
     }

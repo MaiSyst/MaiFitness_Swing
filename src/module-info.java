@@ -13,10 +13,16 @@ module FitnessApp {
     requires swing.toast.notifications;
     requires org.xerial.sqlitejdbc;
     requires org.slf4j;
-    requires MaiFetch;
-    requires java.net.http;
-    requires java.desktop;
     requires com.github.weisj.jsvg;
+    requires com.google.zxing;
+    requires com.google.zxing.javase;
+    requires java.base;
+    requires java.net.http;
+    requires MaiFetch;
+    requires MaiDateCompare;
+    requires java.desktop;
+    requires java.sql;
     requires java.logging;
+    
     exports fitnessapp.models;
 }

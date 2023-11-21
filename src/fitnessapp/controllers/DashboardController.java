@@ -13,10 +13,12 @@ import com.maisyst.utils.enums.ResponseStatusCode;
 import fitnessapp.models.SubscribeModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
+import fitnessapp.utilities.MaiState;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -25,7 +27,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author orion90
  */
-public final class DashboardController {
+public final class DashboardController implements MaiState{
     private final JLabel numberSubscribeActive;
     private final JLabel numberSubscribeStandard;
     private final JLabel numberSubscribeGold;
@@ -77,7 +79,7 @@ public final class DashboardController {
                 }
             });
         } catch (MaiException e) {
-            System.out.println(e.getMessage());
+            Logger.getLogger(DashboardController.class.getName(),e.getMessage());
         }
     }
     private void insertToDataTable(List<SubscribeModel>data){
@@ -92,4 +94,10 @@ public final class DashboardController {
             item.isActive()
         }));
     }
+
+    @Override
+    public void updateState(Object... args) {
+        fetchSubscribes();
+    }
+    
 }

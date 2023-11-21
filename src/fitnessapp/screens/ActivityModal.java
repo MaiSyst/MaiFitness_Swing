@@ -153,6 +153,7 @@ public class ActivityModal extends javax.swing.JDialog {
         jPanel2.setOpaque(false);
         jPanel2.setPreferredSize(new java.awt.Dimension(100, 45));
 
+        btnClose.setContentAreaFilled(false);
         btnClose.setPreferredSize(new java.awt.Dimension(30, 30));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);

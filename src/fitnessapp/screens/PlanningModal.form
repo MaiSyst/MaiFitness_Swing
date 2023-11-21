@@ -118,6 +118,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="closeModal">
+              <Properties>
+                <Property name="contentAreaFilled" type="boolean" value="false"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

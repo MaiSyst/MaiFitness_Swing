@@ -121,6 +121,7 @@
               <SubComponents>
                 <Component class="javax.swing.JButton" name="btnClose">
                   <Properties>
+                    <Property name="contentAreaFilled" type="boolean" value="false"/>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[30, 30]"/>
                     </Property>
@@ -233,15 +234,11 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel2" min="-2" pref="87" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="txtFirstname" alignment="0" min="-2" pref="350" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jLabel2" min="-2" pref="87" max="-2" attributes="0"/>
+                          <EmptySpace min="257" pref="263" max="32767" attributes="0"/>
                       </Group>
+                      <Component id="txtFirstname" alignment="0" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">

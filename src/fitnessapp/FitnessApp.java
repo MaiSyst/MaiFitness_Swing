@@ -13,6 +13,7 @@ import fitnessapp.components.MaiSplashScreen;
 import fitnessapp.models.AuthResponse;
 import fitnessapp.screens.Dashboard;
 import fitnessapp.screens.Login;
+import fitnessapp.screens.PublicDashboard;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Database;
 import java.awt.Font;
@@ -39,6 +40,12 @@ public class FitnessApp {
      */
     public static void main(String[] args) {
         final Connection connection = Database.getInstance();
+        final String[] fileToLoad=new String[]{
+        "Initialisation...",
+        "Initialisation de base de donnée...",
+        "Verification de compte EMF...",
+        "Près à utiliser EMF..."
+        };
         FlatRobotoFont.install();
         UIManager.put("defaultFont", new Font(FlatRobotoFont.FAMILY, Font.PLAIN, 15));
         FlatMacLightLaf.registerCustomDefaultsSource("fitnessapp.properties");
@@ -46,25 +53,42 @@ public class FitnessApp {
 
         MaiSplashScreen splashScreen = new MaiSplashScreen();
         splashScreen.setVisible(true);
-
+        
         try {
             final var stmt = connection.createStatement();
             var rs = stmt.executeQuery("SELECT * FROM auth");
             for (var i = 0; i <= 100; i++) {
                 splashScreen.getProgressPercentage().setText(i + "%");
+               
+                if(i<=25&&i>0){
+                    splashScreen.getMsgLoader().setText(fileToLoad[0]);
+                }
+                if(i>25&&i<60){
+                    splashScreen.getMsgLoader().setText(fileToLoad[1]);
+                }
+                if(i>60&&i<90){
+                    splashScreen.getMsgLoader().setText(fileToLoad[2]);
+                }
+                if(i>90){
+                    splashScreen.getMsgLoader().setText(fileToLoad[3]);
+                }
                 var delay = Math.round(Math.random() * 80);
                 try {
                     Thread.sleep(delay);
                 } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());
+                    Thread.currentThread().interrupt();
                 }
             }
             if (rs.next()) {
                 checkToken(rs.getString("authToken"))
-                        .ifPresentOrElse(
-                                authResponse -> {
+                        .ifPresentOrElse(authResponse -> {
                                     SwingUtilities.invokeLater(() -> {
-                                        new Dashboard(authResponse).setVisible(true);
+                                        if (authResponse.role().toLowerCase().equals("admin")) {
+                                            new Dashboard(authResponse).setVisible(true);
+                                        } else {
+                                            new PublicDashboard(authResponse).setVisible(true);
+                                        }
+
                                         splashScreen.dispose();
                                     });
                                 },

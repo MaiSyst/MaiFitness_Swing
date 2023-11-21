@@ -161,6 +161,7 @@ public class CoachModal extends javax.swing.JDialog {
 
         jPanel1.setOpaque(false);
 
+        btnClose.setContentAreaFilled(false);
         btnClose.setMaximumSize(new java.awt.Dimension(30, 30));
         btnClose.setMinimumSize(new java.awt.Dimension(30, 30));
         btnClose.setPreferredSize(new java.awt.Dimension(35, 35));
@@ -239,12 +240,10 @@ public class CoachModal extends javax.swing.JDialog {
         firstnameContainerLayout.setHorizontalGroup(
             firstnameContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(firstnameContainerLayout.createSequentialGroup()
-                .addGroup(firstnameContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(firstnameContainerLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtFirstname, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0))
+                .addContainerGap()
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(257, 263, Short.MAX_VALUE))
+            .addComponent(txtFirstname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         firstnameContainerLayout.setVerticalGroup(
             firstnameContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

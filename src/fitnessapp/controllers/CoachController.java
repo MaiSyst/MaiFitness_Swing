@@ -16,7 +16,6 @@ import fitnessapp.models.ActivityModel;
 import fitnessapp.models.CoachModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
-import fitnessapp.utilities.MaiUtils;
 import java.awt.Color;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -77,10 +76,12 @@ public class CoachController {
         this.selectedItemTable = selectedItemTable;
         this.filterActivity = filterActivity;
         this.fetch = API.fetch(new Authorization(token));
-        addCoach.addActionListener(l -> onHandleShowModal());
-        addCoach.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "plus.svg"));
-        removeCoach.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "trash.svg"));
-        removeCoach.addActionListener(l -> activitySuppression());
+        if(removeCoach!=null&&addCoach!=null){
+            addCoach.addActionListener(l -> onHandleShowModal());
+            addCoach.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "plus.svg"));
+            removeCoach.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "trash.svg"));
+            removeCoach.addActionListener(l -> activitySuppression());
+        }
         search.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Rechercher par prenom ou nom...");
         search.putClientProperty(FlatClientProperties.TEXT_FIELD_LEADING_ICON, new FlatSVGIcon(Constants.ICONS_PATH + "search.svg"));
 
@@ -133,7 +134,7 @@ public class CoachController {
         filterActivity.addItemListener(l -> {
             if (l.getStateChange()==SELECTED) {
                 var item=l.getItem().toString();
-                if(item.equals("Tout")){
+                if(item.equals("Toutes les activites")){
                     insertToDataTable(dataList);
                 }
                 else{
@@ -173,7 +174,7 @@ public class CoachController {
                     }.getType();
                     final List<ActivityModel> models = gson.fromJson(result, activityListType);
                     filterActivity.removeAllItems();
-                    filterActivity.addItem("Tout");
+                    filterActivity.addItem("Toutes les activites");
                     models.forEach(model -> filterActivity.addItem(model.label()));
                 }
             });

@@ -6,6 +6,7 @@ package fitnessapp.screens;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import fitnessapp.controllers.AccountPopupController;
 import fitnessapp.controllers.ActivityController;
 import fitnessapp.controllers.CoachController;
 import fitnessapp.controllers.DashboardController;
@@ -13,10 +14,14 @@ import fitnessapp.controllers.MemberController;
 import fitnessapp.controllers.PlanningController;
 import fitnessapp.controllers.RoomController;
 import fitnessapp.controllers.SubscriptionController;
+import fitnessapp.controllers.UserController;
 import fitnessapp.models.AuthResponse;
 import fitnessapp.utilities.Constants;
 import fitnessapp.utilities.Database;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 import raven.toast.Notifications;
 
 /**
@@ -38,27 +43,37 @@ public class Dashboard extends javax.swing.JFrame {
     private final PlanningController planningController;
     private final DashboardController controller;
     private final AuthResponse authResponse;
+    private final UserController userController;
+    private AccountPopupController accountPopupController;
 
     public Dashboard(AuthResponse authResponse) {
-                this.authResponse = authResponse;
+        this.authResponse = authResponse;
         initComponents();
+
         activityController = new ActivityController(this, btnAddActivity, inputSearchActivity,
-                btnDeleteActivity, tableActivity, authResponse.token(),numberActivitiesSelected);
+                btnDeleteActivity, tableActivity,
+                authResponse.token(),
+                numberActivitiesSelected);
         roomController = new RoomController(this,
-                btnAddRoom,roomBody, inputSearchRoom,authResponse.token());
+                btnAddRoom, roomBody, inputSearchRoom, authResponse.token());
+        controller = new DashboardController(suscribeActiveInfo,
+                numberSubscribeStandard, numberSubscribeGold,
+                numberSubscribePrime,
+                annualMontant,
+                tableSubscribeActive, authResponse.token());
         memberController = new MemberController(btnDeleteMember,
                 btnAddMember, tableMember, inputSearchMember,
-                this,authResponse.token());
+                this, authResponse.token(), controller);
         coachController = new CoachController(
-                inputSearchCoach, 
-                btnDeleteCoach, 
+                inputSearchCoach,
+                btnDeleteCoach,
                 btnAddCoach,
                 tableCoach,
                 numberCoachSelected,
-                authResponse.token(), this,filterActivityCoach);
-        subscriptionController=new SubscriptionController(this, 
-                standardCard, 
-                primeCard, 
+                authResponse.token(), this, filterActivityCoach);
+        subscriptionController = new SubscriptionController(this,
+                standardCard,
+                primeCard,
                 goldCard,
                 standardMonth,
                 standardPrice,
@@ -67,47 +82,57 @@ public class Dashboard extends javax.swing.JFrame {
                 goldMonth,
                 goldPrice,
                 authResponse.token());
-        planningController=new PlanningController(this, 
+        planningController = new PlanningController(this,
                 ComboFilterDay,
                 ComboFilterActivity,
-                ComboFilterRoom,resetAction, 
-                btnDeletePlanning, 
+                ComboFilterRoom, resetAction,
+                btnDeletePlanning,
                 btnAddPlanning, tablePlanning,
-                numberPlanningSelected, authResponse.token());
-        controller=new DashboardController(suscribeActiveInfo,
-                numberSubscribeStandard, numberSubscribeGold, 
-                numberSubscribePrime, 
-                annualMontant, 
-                tableSubscribeActive, authResponse.token());
-        signOut.addActionListener(l->{
-            try{
-                var stmt=Database.getInstance().createStatement();
-                stmt.execute("DELETE FROM auth");
-                new Login().setVisible(true);
-                this.dispose();
+                numberPlanningSelected, authResponse.token(),
+                roomController
+        );
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(accountPopupController!=null){
+                    accountPopupController.dispose();
+                }
             }
-            catch(SQLException ex){}
+
         });
+        signOut.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "accountUser.svg"));
+        signOut.addActionListener(l -> {
+            accountPopupController = new AccountPopupController(this, signOut.getLocation());
+            accountPopupController.show();
+
+        });
+        userController = new UserController(
+                this,
+                btnAddUser,
+                btnDeleteUser, inputSearchUser,
+                numberUsersSelected, tableUsers,
+                authResponse.token());
         init();
     }
 
     private void init() {
-        menu.setIconAt(0, new FlatSVGIcon(Constants.ICONS_PATH+"home.svg"));
-        menu.setIconAt(1, new FlatSVGIcon(Constants.ICONS_PATH+"activity.svg"));
-        menu.setIconAt(2, new FlatSVGIcon(Constants.ICONS_PATH+"planning.svg"));
-        menu.setIconAt(3, new FlatSVGIcon(Constants.ICONS_PATH+"members.svg"));
-        menu.setIconAt(4, new FlatSVGIcon(Constants.ICONS_PATH+"room.svg"));
-        menu.setIconAt(5, new FlatSVGIcon(Constants.ICONS_PATH+"coach.svg"));
-        menu.setIconAt(6, new FlatSVGIcon(Constants.ICONS_PATH+"user.svg"));
-        menu.setIconAt(7, new FlatSVGIcon(Constants.ICONS_PATH+"subscription.svg"));
+        menu.setIconAt(0, new FlatSVGIcon(Constants.ICONS_PATH + "home.svg"));
+        menu.setIconAt(1, new FlatSVGIcon(Constants.ICONS_PATH + "activity.svg"));
+        menu.setIconAt(2, new FlatSVGIcon(Constants.ICONS_PATH + "planning.svg"));
+        menu.setIconAt(3, new FlatSVGIcon(Constants.ICONS_PATH + "members.svg"));
+        menu.setIconAt(4, new FlatSVGIcon(Constants.ICONS_PATH + "room.svg"));
+        menu.setIconAt(5, new FlatSVGIcon(Constants.ICONS_PATH + "coach.svg"));
+        menu.setIconAt(6, new FlatSVGIcon(Constants.ICONS_PATH + "user.svg"));
+        menu.setIconAt(7, new FlatSVGIcon(Constants.ICONS_PATH + "subscription.svg"));
         menu.putClientProperty("FlatLaf.style", "font: semibold $h3.regular.font;");
         subscribeInfo.putClientProperty(flatStyle, styleCard + "background:#00ff7f30");
         subscribeInfoTotal.putClientProperty(flatStyle, styleCard + "background:#ff557f30");
         subscribeInfoMoney.putClientProperty(flatStyle, styleCard + "background:#aa55ff30");
         Notifications.getInstance().setJFrame(this);
-       
+
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -122,6 +147,7 @@ public class Dashboard extends javax.swing.JFrame {
         header = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         signOut = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
         menu = new javax.swing.JTabbedPane();
         home = new javax.swing.JPanel();
         homeContainer = new javax.swing.JPanel();
@@ -248,35 +274,44 @@ public class Dashboard extends javax.swing.JFrame {
 
         header.setBackground(new java.awt.Color(255, 255, 255));
         header.setOpaque(false);
-        header.setPreferredSize(new java.awt.Dimension(1200, 50));
+        header.setPreferredSize(new java.awt.Dimension(1200, 60));
 
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("INFINITY");
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/emf50x50.png"))); // NOI18N
 
+        signOut.setBackground(new java.awt.Color(255, 255, 255));
+        signOut.setToolTipText("Se deconnecter");
         signOut.setMaximumSize(new java.awt.Dimension(35, 35));
         signOut.setMinimumSize(new java.awt.Dimension(35, 35));
-        signOut.setPreferredSize(new java.awt.Dimension(35, 35));
+        signOut.setPreferredSize(new java.awt.Dimension(50, 50));
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/chevronDown.png"))); // NOI18N
 
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
         header.setLayout(headerLayout);
         headerLayout.setHorizontalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headerLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(19, 19, 19)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1015, Short.MAX_VALUE)
-                .addComponent(signOut, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1057, Short.MAX_VALUE)
+                .addComponent(signOut, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(5, 5, 5)
+                .addComponent(jLabel2)
+                .addGap(26, 26, 26))
         );
         headerLayout.setVerticalGroup(
             headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(headerLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(signOut, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(signOut, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -383,7 +418,6 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel6.setText("Montants global");
 
         annualMontant.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
-        annualMontant.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         annualMontant.setText("1.000.000 FCFA");
 
         javax.swing.GroupLayout subscribeInfoMoneyLayout = new javax.swing.GroupLayout(subscribeInfoMoney);
@@ -391,13 +425,10 @@ public class Dashboard extends javax.swing.JFrame {
         subscribeInfoMoneyLayout.setHorizontalGroup(
             subscribeInfoMoneyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subscribeInfoMoneyLayout.createSequentialGroup()
+                .addGap(46, 46, 46)
                 .addGroup(subscribeInfoMoneyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(subscribeInfoMoneyLayout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(subscribeInfoMoneyLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(annualMontant, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(annualMontant, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         subscribeInfoMoneyLayout.setVerticalGroup(
@@ -636,7 +667,7 @@ public class Dashboard extends javax.swing.JFrame {
         headerComboxLayout.columnWeights = new double[] {0.5, 0.5, 0.5};
         headerCombox.setLayout(headerComboxLayout);
 
-        ComboFilterDay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tout", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche", " " }));
+        ComboFilterDay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tous les jours", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche", " " }));
         ComboFilterDay.setPreferredSize(new java.awt.Dimension(95, 50));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -802,7 +833,6 @@ public class Dashboard extends javax.swing.JFrame {
         btnDeleteMember.setBackground(new java.awt.Color(255, 0, 51));
         btnDeleteMember.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         btnDeleteMember.setForeground(new java.awt.Color(255, 255, 255));
-        btnDeleteMember.setText("Supprimer");
         btnDeleteMember.setMinimumSize(new java.awt.Dimension(110, 50));
         btnDeleteMember.setPreferredSize(new java.awt.Dimension(97, 50));
 
@@ -814,7 +844,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(numberMemberSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDeleteMember, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnDeleteMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
         memberHeaderLeftLayout.setVerticalGroup(
@@ -848,7 +878,7 @@ public class Dashboard extends javax.swing.JFrame {
         btnAddMember.setBackground(new java.awt.Color(130, 185, 0));
         btnAddMember.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         btnAddMember.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddMember.setText("Ajouter");
+        btnAddMember.setToolTipText("Ajouter un membre");
         btnAddMember.setMinimumSize(new java.awt.Dimension(106, 50));
         btnAddMember.setPreferredSize(new java.awt.Dimension(106, 50));
 
@@ -858,7 +888,7 @@ public class Dashboard extends javax.swing.JFrame {
             memberHeaderRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(memberHeaderRightLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(btnAddMember, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         memberHeaderRightLayout.setVerticalGroup(
@@ -1136,18 +1166,31 @@ public class Dashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Label", "Description"
+                "Username", "Prénom", "Nom", "Date de naissance", "Adresse", "Phone", "Salle", "Actions", "ID"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, true, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tableUsers.setEditingColumn(7);
+        tableUsers.getTableHeader().setReorderingAllowed(false);
         jScrollPane6.setViewportView(tableUsers);
+        if (tableUsers.getColumnModel().getColumnCount() > 0) {
+            tableUsers.getColumnModel().getColumn(8).setResizable(false);
+            tableUsers.getColumnModel().getColumn(8).setPreferredWidth(0);
+        }
 
         userMain.add(jScrollPane6, java.awt.BorderLayout.CENTER);
 
@@ -1162,7 +1205,6 @@ public class Dashboard extends javax.swing.JFrame {
         btnDeleteUser.setBackground(new java.awt.Color(255, 0, 51));
         btnDeleteUser.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         btnDeleteUser.setForeground(new java.awt.Color(255, 255, 255));
-        btnDeleteUser.setText("Supprimer");
         btnDeleteUser.setMinimumSize(new java.awt.Dimension(110, 50));
         btnDeleteUser.setPreferredSize(new java.awt.Dimension(97, 50));
 
@@ -1174,7 +1216,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(numberUsersSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDeleteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnDeleteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20))
         );
         usersHeaderLeftLayout.setVerticalGroup(
@@ -1208,7 +1250,6 @@ public class Dashboard extends javax.swing.JFrame {
         btnAddUser.setBackground(new java.awt.Color(130, 185, 0));
         btnAddUser.setFont(new java.awt.Font("SF Pro Display", 1, 18)); // NOI18N
         btnAddUser.setForeground(new java.awt.Color(255, 255, 255));
-        btnAddUser.setText("Ajouter");
         btnAddUser.setMinimumSize(new java.awt.Dimension(106, 50));
         btnAddUser.setPreferredSize(new java.awt.Dimension(106, 50));
 
@@ -1218,7 +1259,7 @@ public class Dashboard extends javax.swing.JFrame {
             userHeaderRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(userHeaderRightLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
-                .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         userHeaderRightLayout.setVerticalGroup(
@@ -1482,6 +1523,7 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;

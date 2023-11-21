@@ -10,4 +10,4 @@ import java.util.List;
  *
  * @author orion90
  */
-public record RoomModel(String roomId,String roomName,List<PlanningModel>planning) {}
+public record RoomModel(String roomId,String roomName,UserModel manager,List<CustomerModel>customers,List<PlanningModel>planning) {}

@@ -124,7 +124,13 @@ public final class CoachModalController {
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Un entraineur à été ajouté.");
                         functionCall.invoked();
                     } else {
-                        Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, result);
+                        if (result.toLowerCase().contains("duplicate entry")) {
+                            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Ce numero de telephone exist deja.");
+
+                        } else {
+                            Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, result);
+
+                        }
                     }
                 });
             } catch (MaiException e) {

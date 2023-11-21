@@ -9,8 +9,10 @@ import com.maisyst.exceptions.MaiException;
 import com.maisyst.utils.enums.ResponseStatusCode;
 import fitnessapp.models.AuthResponse;
 import fitnessapp.screens.Dashboard;
+import fitnessapp.screens.PublicDashboard;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Database;
+import static fitnessapp.utilities.MaiUtils.getTextPassword;
 import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -79,11 +81,12 @@ public class LoginController {
                         AuthResponse auth = gson.fromJson(result, AuthResponse.class);
                         if (isStayConnected) {
                             try {
-                                var query = "INSERT INTO auth(username,authToken,role) VALUES(?,?,?)";
+                                var query = "INSERT INTO auth(username,authToken,role,roomId) VALUES(?,?,?,?)";
                                 var pstmt = Database.getInstance().prepareStatement(query);
                                 pstmt.setString(1, auth.username());
                                 pstmt.setString(2, auth.token());
                                 pstmt.setString(3, auth.role());
+                                pstmt.setString(4, auth.roomId());
                                 pstmt.execute();
 
                             } catch (SQLException e) {
@@ -95,7 +98,11 @@ public class LoginController {
                             public void run() {
                                 loader.setVisible(false);
                                 parent.dispose();
-                                new Dashboard(auth).setVisible(true);
+                                if(auth.role().toLowerCase().equals("admin")){
+                                    new Dashboard(auth).setVisible(true);
+                                }else{
+                                    new PublicDashboard(auth).setVisible(true);
+                                }
                             }
                         }, 1500L);
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, 1200, "Initialisation...");
@@ -103,12 +110,6 @@ public class LoginController {
 
                         if (status == ResponseStatusCode.NOT_FOUND) {
                             Notifications.getInstance().show(Notifications.Type.ERROR, 3000, "Votre nom d'utilisateur ou mot de passe est incorrect.");
-//                            if (result.contains("Password")) {
-//
-//                                msgInputPwd.setText("Votre mot de passe est incorrect");
-//                            } else {
-//                                msgInputText.setText("Votre nom d'utilisateur est incorrect");
-//                            }
                         }
                         loader.setVisible(false);
                     }
@@ -142,14 +143,4 @@ public class LoginController {
             return false;
         }
     }
-
-    private String getTextPassword(JPasswordField field) {
-        StringBuilder stringBuilder = new StringBuilder();
-        var passChars = field.getPassword();
-        for (int i = 0; i < passChars.length; i++) {
-            stringBuilder.append(passChars[i]);
-        }
-        return stringBuilder.toString();
-    }
-
 }

@@ -22,7 +22,6 @@ public class RoomModal extends javax.swing.JDialog {
     /**
      * Creates new form ActivityModal
      */
-    private final String styleCard = "arc:20;";
     private final String flatStyle = FlatClientProperties.STYLE;
 
     public RoomModal() {
@@ -83,12 +82,13 @@ public class RoomModal extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
-        setMaximumSize(new java.awt.Dimension(400, 300));
-        setMinimumSize(new java.awt.Dimension(400, 300));
+        setMaximumSize(new java.awt.Dimension(400, 370));
+        setMinimumSize(new java.awt.Dimension(400, 370));
         setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
         setName("Ajouter Salle"); // NOI18N
         setUndecorated(true);
+        setPreferredSize(new java.awt.Dimension(400, 370));
         setResizable(false);
         setType(java.awt.Window.Type.UTILITY);
 
@@ -96,7 +96,7 @@ public class RoomModal extends javax.swing.JDialog {
         container.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 2, true));
         container.setMaximumSize(new java.awt.Dimension(400, 300));
         container.setMinimumSize(new java.awt.Dimension(400, 300));
-        container.setPreferredSize(new java.awt.Dimension(400, 300));
+        container.setPreferredSize(new java.awt.Dimension(400, 250));
         container.setLayout(new java.awt.BorderLayout());
 
         header.setBackground(new java.awt.Color(220, 220, 220));
@@ -107,6 +107,7 @@ public class RoomModal extends javax.swing.JDialog {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Ajouter une Salle");
 
+        btnClose.setContentAreaFilled(false);
         btnClose.setPreferredSize(new java.awt.Dimension(30, 30));
 
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
@@ -135,14 +136,15 @@ public class RoomModal extends javax.swing.JDialog {
         center.setBackground(new java.awt.Color(221, 221, 221));
         center.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 20, 0, 20));
         center.setOpaque(false);
-        center.setLayout(new java.awt.GridLayout(0, 1, 10, 0));
+        center.setPreferredSize(new java.awt.Dimension(376, 60));
+        center.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         labelContainer.setBackground(new java.awt.Color(255, 255, 255));
         labelContainer.setMaximumSize(new java.awt.Dimension(400, 146));
         labelContainer.setMinimumSize(new java.awt.Dimension(400, 146));
         labelContainer.setName(""); // NOI18N
         labelContainer.setOpaque(false);
-        labelContainer.setPreferredSize(new java.awt.Dimension(400, 146));
+        labelContainer.setPreferredSize(new java.awt.Dimension(400, 100));
 
         jLabel2.setBackground(new java.awt.Color(0, 0, 0));
         jLabel2.setFont(new java.awt.Font("sansserif", 1, 18)); // NOI18N
@@ -164,14 +166,14 @@ public class RoomModal extends javax.swing.JDialog {
         labelContainerLayout.setVerticalGroup(
             labelContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(labelContainerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(24, 24, 24)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inputRoomName, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
-        center.add(labelContainer);
+        center.add(labelContainer, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 10, 356, 120));
 
         container.add(center, java.awt.BorderLayout.CENTER);
 
