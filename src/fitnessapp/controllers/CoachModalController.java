@@ -123,6 +123,7 @@ public final class CoachModalController {
                     if (status == ResponseStatusCode.OK) {
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Un entraineur à été ajouté.");
                         functionCall.invoked();
+                        clearInputText();
                     } else {
                         if (result.toLowerCase().contains("duplicate entry")) {
                             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Ce numero de telephone exist deja.");
@@ -138,7 +139,12 @@ public final class CoachModalController {
             }
         }
     }
-
+    private void clearInputText(){
+        coachModal.getPhoneNumber().setText("");
+        coachModal.getTxtAddress().setText("");
+        coachModal.getTxtFirstname().setText("");
+        coachModal.getTxtLastname().setText("");
+    }
     private void editCoach(String coachId) {
         var firstName = coachModal.getTxtFirstname().getText();
         var lastName = coachModal.getTxtLastname().getText();

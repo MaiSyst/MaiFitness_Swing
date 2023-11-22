@@ -8,4 +8,5 @@ package fitnessapp.models;
  *
  * @author orion90
  */
-public record SubscribeModel(String subscribeId,String dateStart,String dateEnd,boolean isActive,CustomerModel customer,SubscriptionModel subscription){}
+public record SubscribeInCustomerModel(
+        String subscribeId,String dateStart,String dateEnd,boolean isActive,String subscriptionType){}

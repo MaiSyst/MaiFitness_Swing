@@ -34,8 +34,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 import raven.toast.Notifications;
 
@@ -195,7 +193,7 @@ public class UserController {
                 }
             });
         } catch (MaiException e) {
-            System.out.println(e.getMessage());
+            Logger.getLogger(UserController.class.getName(), e.getMessage());
         }
     }
 
@@ -216,8 +214,15 @@ public class UserController {
     }
 
     private void onHandleEditShowModal() {
-
-        new UserModalController(fetch, this::requestDataTable).show();
+        var row=table.getSelectedRow();
+        var firstName=table.getValueAt(row, 1).toString();
+        var lastName=table.getValueAt(row, 2).toString();
+        var date=table.getValueAt(row, 3).toString();
+        var address=table.getValueAt(row, 4).toString();
+        var phone=table.getValueAt(row, 5).toString();
+        var roomName=table.getValueAt(row,6).toString();
+        
+        new UserModalController(fetch,firstName,lastName,address,phone,date,roomName, this::requestDataTable).show();
     }
 
     private void onSearchUser(final String query) {
@@ -238,8 +243,8 @@ public class UserController {
                 }
             });
             changeSelectedItems();
-        } catch (Exception e) {
-
+        } catch (MaiException e) {
+             Logger.getLogger(UserController.class.getName(), e.getMessage());
         }
     }
 
@@ -262,4 +267,5 @@ public class UserController {
         table.getColumnModel().getColumn(8).setMinWidth(0);
         table.getColumnModel().getColumn(8).setPreferredWidth(0);
     }
+    
 }

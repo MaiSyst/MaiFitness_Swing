@@ -34,7 +34,10 @@ public class AccountPopup extends javax.swing.JDialog {
         signOut = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setModalityType(java.awt.Dialog.ModalityType.MODELESS);
+        setName(""); // NOI18N
         setUndecorated(true);
+        setResizable(false);
         setType(java.awt.Window.Type.POPUP);
 
         container.setBackground(new java.awt.Color(255, 255, 255));

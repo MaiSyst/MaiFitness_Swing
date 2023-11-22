@@ -7,23 +7,16 @@ package fitnessapp.screens;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import fitnessapp.controllers.AccountPopupController;
-import fitnessapp.controllers.ActivityController;
 import fitnessapp.controllers.CoachController;
-import fitnessapp.controllers.DashboardController;
 import fitnessapp.controllers.MemberController;
 import fitnessapp.controllers.PlanningController;
 import fitnessapp.controllers.PublicDashboardController;
-import fitnessapp.controllers.RoomController;
-import fitnessapp.controllers.SubscriptionController;
 import fitnessapp.models.ActivityModel;
 import fitnessapp.models.AuthResponse;
 import fitnessapp.models.SubscriptionModel;
 import fitnessapp.utilities.Constants;
-import fitnessapp.utilities.Database;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
 import raven.toast.Notifications;
 
 /**
@@ -45,7 +38,8 @@ public class PublicDashboard extends javax.swing.JFrame {
 
         memberController = new MemberController(null,
                 btnAddMember, tableMember, inputSearchMember,
-                this, authResponse.token(), null,true,authResponse.roomId());
+                this, btnResubscribe,
+                authResponse.token(), null,authResponse.roomId());
         final PublicDashboardController controller = new PublicDashboardController(
                 this,
                 inputCheckMember,
@@ -62,7 +56,6 @@ public class PublicDashboard extends javax.swing.JFrame {
                 btnSaveMember,
                 msgFirstName,
                 msgLastName,
-                msgBirthdate,
                 msgAddress,
                 msgMontant,
                 authResponse.token(),
@@ -75,7 +68,9 @@ public class PublicDashboard extends javax.swing.JFrame {
                 null,
                 tableCoach,
                 null,
-                authResponse.token(), this, filterActivityCoach);
+                authResponse.token(), this, 
+                filterActivityCoach,
+                false);
 
         planningController = new PlanningController(this,
                 ComboFilterDay,
@@ -84,7 +79,8 @@ public class PublicDashboard extends javax.swing.JFrame {
                 null,
                 null, tablePlanning,
                 null, authResponse.token(),
-                null
+                null,
+                false
         );
 
         firstNameMember.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Entrer le prenom du client.");
@@ -98,7 +94,7 @@ public class PublicDashboard extends javax.swing.JFrame {
         undescore.putClientProperty(FlatClientProperties.STYLE, "arc:20");
         btnValidCheck.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "check.svg"));
         btnSaveMember.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "save.svg"));
-        this.addMouseListener(new MouseAdapter() {
+        header.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
@@ -108,12 +104,24 @@ public class PublicDashboard extends javax.swing.JFrame {
             }
 
         });
+        container.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if(accountPopupController!=null){
+                    accountPopupController.dispose();
+                }
+            }
+
+        });
+        
         signOut.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "accountUser.svg"));
         signOut.addActionListener(l -> {
-            accountPopupController=new AccountPopupController(this, signOut.getLocation());
+            accountPopupController=new AccountPopupController(this,authResponse.token(),authResponse.username(),signOut.getLocation());
             accountPopupController.show();
            
         });
+        
         init();
     }
 
@@ -213,6 +221,7 @@ public class PublicDashboard extends javax.swing.JFrame {
         inputSearchMember = new javax.swing.JTextField();
         memberHeaderRight = new javax.swing.JPanel();
         btnAddMember = new javax.swing.JButton();
+        btnResubscribe = new javax.swing.JButton();
         coach = new javax.swing.JPanel();
         coachHeader = new javax.swing.JPanel();
         coachHeaderSideLeft = new javax.swing.JPanel();
@@ -277,9 +286,9 @@ public class PublicDashboard extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(10, 10, 10))
-                    .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(signOut, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(signOut, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
@@ -302,6 +311,8 @@ public class PublicDashboard extends javax.swing.JFrame {
         infoContainer.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 20, 0, 20));
         infoContainer.setPreferredSize(new java.awt.Dimension(1069, 50));
         infoContainer.setLayout(new java.awt.BorderLayout());
+
+        inputCheckMember.setFont(new java.awt.Font("SansSerif", 1, 20)); // NOI18N
         infoContainer.add(inputCheckMember, java.awt.BorderLayout.CENTER);
 
         btnValidCheck.setBackground(new java.awt.Color(23, 174, 1));
@@ -881,11 +892,11 @@ public class PublicDashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Prenom", "Nom", "Date de naissance", "Adresse", "Action"
+                "ID", "Prenom", "Nom", "Date de naissance", "Adresse", "Action", "CustomerId", "RoomName", "Expirate"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true
+                false, false, false, false, false, true, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -940,12 +951,17 @@ public class PublicDashboard extends javax.swing.JFrame {
         btnAddMember.setMinimumSize(new java.awt.Dimension(106, 50));
         btnAddMember.setPreferredSize(new java.awt.Dimension(106, 50));
 
+        btnResubscribe.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        btnResubscribe.setForeground(new java.awt.Color(51, 153, 0));
+        btnResubscribe.setText("Réabonner");
+
         javax.swing.GroupLayout memberHeaderRightLayout = new javax.swing.GroupLayout(memberHeaderRight);
         memberHeaderRight.setLayout(memberHeaderRightLayout);
         memberHeaderRightLayout.setHorizontalGroup(
             memberHeaderRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(memberHeaderRightLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addComponent(btnResubscribe)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAddMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -953,7 +969,9 @@ public class PublicDashboard extends javax.swing.JFrame {
             memberHeaderRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, memberHeaderRightLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAddMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(memberHeaderRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnAddMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnResubscribe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(23, 23, 23))
         );
 
@@ -1069,6 +1087,7 @@ public class PublicDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel birthdateAndAddress;
     private javax.swing.JTextField birthdateMember;
     private javax.swing.JButton btnAddMember;
+    private javax.swing.JButton btnResubscribe;
     private javax.swing.JButton btnSaveMember;
     private javax.swing.JButton btnValidCheck;
     private javax.swing.JPanel centerHeader;

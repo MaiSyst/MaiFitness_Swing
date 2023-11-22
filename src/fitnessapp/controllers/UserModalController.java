@@ -44,12 +44,15 @@ public final class UserModalController {
         fetchRoom();
     }
 
-    public UserModalController(final MaiFetch fetch,
+    public UserModalController(
+            final MaiFetch fetch,
             String firstName,
             String lastName,
             String address,
+            String phone,
             String birthdate,
             String roomName,
+            
             final MaiFunctionCall callback) {
         this.callback = callback;
         this.fetch = fetch;
@@ -60,6 +63,8 @@ public final class UserModalController {
         usersModal.getTxtLastname().setText(lastName);
         usersModal.getTxtAddress().setText(address);
         usersModal.getDatePicker().setText(birthdate);
+        usersModal.getPhoneNumber().setText(phone);
+        usersModal.getBtnAdded().setText("Modifier");
         for (var i = 0; i < usersModal.getComboxRoomModel().getItemCount(); i++) {
             if (usersModal.getComboxRoomModel().getItemAt(i).roomName().equals(roomName)) {
                 usersModal.getComboxRoomModel().setSelectedIndex(i);
@@ -115,6 +120,7 @@ public final class UserModalController {
 
         }
     }
+  
      private void onHandleEditUser() {
         if (isInputBlank()) {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Verifier que si l'un des champs n'est pas vide.");

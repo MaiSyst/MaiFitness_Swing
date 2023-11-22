@@ -4,6 +4,10 @@
  */
 package fitnessapp.components;
 
+import java.awt.Graphics;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -12,7 +16,7 @@ import javax.swing.JPanel;
  *
  * @author orion90
  */
-public class CardMember extends javax.swing.JDialog {
+public class CardMember extends javax.swing.JDialog{
 
     /**
      * Creates new form CardMember
@@ -20,7 +24,6 @@ public class CardMember extends javax.swing.JDialog {
     public CardMember(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        //footer.setVisible(false);
     }
 
     /**
@@ -47,30 +50,35 @@ public class CardMember extends javax.swing.JDialog {
         birthday = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         address = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        roomName = new javax.swing.JLabel();
+        expirateDate = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         btnClose = new javax.swing.JButton();
         footer = new javax.swing.JPanel();
         btnPrint = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(500, 400));
-        setMinimumSize(new java.awt.Dimension(500, 400));
+        setMaximumSize(new java.awt.Dimension(550, 600));
+        setMinimumSize(new java.awt.Dimension(550, 600));
         setModal(true);
         setName("CardMember"); // NOI18N
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(500, 450));
+        setPreferredSize(new java.awt.Dimension(550, 600));
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
 
-        container.setBackground(new java.awt.Color(237, 237, 237));
+        container.setBackground(new java.awt.Color(245, 245, 245));
         container.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 2, true));
         container.setLayout(new java.awt.BorderLayout());
 
         center.setOpaque(false);
 
         card.setBackground(new java.awt.Color(255, 255, 255));
+        card.setPreferredSize(new java.awt.Dimension(460, 400));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/CardUser.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/emf100x100.png"))); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("SF Pro", 1, 17)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -81,14 +89,14 @@ public class CardMember extends javax.swing.JDialog {
         identity.setText("jLabel3");
 
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel3.setText("Prénom");
+        jLabel3.setText("Prénom / First name");
 
         firstName.setFont(new java.awt.Font("SF Pro", 1, 17)); // NOI18N
         firstName.setForeground(new java.awt.Color(0, 0, 0));
         firstName.setText("jLabel4");
 
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("Nom");
+        jLabel4.setText("Nom / Surname");
 
         lastName.setFont(new java.awt.Font("SF Pro", 1, 17)); // NOI18N
         lastName.setForeground(new java.awt.Color(0, 0, 0));
@@ -97,18 +105,33 @@ public class CardMember extends javax.swing.JDialog {
         qrCode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Date de naissance");
+        jLabel6.setText("Date de naissance / Date of birth");
 
         birthday.setFont(new java.awt.Font("SF Pro", 1, 17)); // NOI18N
         birthday.setForeground(new java.awt.Color(0, 0, 0));
         birthday.setText("jLabel7");
 
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel5.setText("Adresse");
+        jLabel5.setText("Adresse / Address");
 
         address.setFont(new java.awt.Font("SF Pro", 1, 17)); // NOI18N
         address.setForeground(new java.awt.Color(0, 0, 0));
         address.setText("jLabel7");
+
+        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setText("Salle de sport / Gym");
+
+        roomName.setFont(new java.awt.Font("SF Pro", 1, 17)); // NOI18N
+        roomName.setForeground(new java.awt.Color(0, 0, 0));
+        roomName.setText("jLabel7");
+
+        expirateDate.setFont(new java.awt.Font("SF Pro", 1, 17)); // NOI18N
+        expirateDate.setForeground(new java.awt.Color(0, 0, 0));
+        expirateDate.setText("jLabel7");
+
+        jLabel9.setFont(new java.awt.Font("SF Pro", 1, 17)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel9.setText("Expiration / Expirate");
 
         javax.swing.GroupLayout cardLayout = new javax.swing.GroupLayout(card);
         card.setLayout(cardLayout);
@@ -132,12 +155,17 @@ public class CardMember extends javax.swing.JDialog {
                         .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(cardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 314, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 360, Short.MAX_VALUE)
                             .addComponent(birthday, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(address, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(cardLayout.createSequentialGroup()
-                                .addComponent(jLabel5)
+                                .addGroup(cardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel9))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(address, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(expirateDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(roomName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         cardLayout.setVerticalGroup(
@@ -162,14 +190,22 @@ public class CardMember extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(birthday)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(address)
-                        .addContainerGap(15, Short.MAX_VALUE))
+                        .addComponent(jLabel5))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(cardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(cardLayout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(qrCode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(address)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel7)
+                        .addGap(5, 5, 5)
+                        .addComponent(roomName)
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel9)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(expirateDate))
+                    .addComponent(qrCode, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         btnClose.setBackground(new java.awt.Color(231, 0, 83));
@@ -190,7 +226,7 @@ public class CardMember extends javax.swing.JDialog {
                         .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(centerLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addComponent(card, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(card, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)))
                 .addGap(20, 20, 20))
         );
         centerLayout.setVerticalGroup(
@@ -199,8 +235,8 @@ public class CardMember extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(btnClose, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(card, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34))
+                .addComponent(card, javax.swing.GroupLayout.PREFERRED_SIZE, 431, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(56, 56, 56))
         );
 
         container.add(center, java.awt.BorderLayout.CENTER);
@@ -218,7 +254,7 @@ public class CardMember extends javax.swing.JDialog {
             .addGroup(footerLayout.createSequentialGroup()
                 .addGap(173, 173, 173)
                 .addComponent(btnPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(175, Short.MAX_VALUE))
+                .addContainerGap(221, Short.MAX_VALUE))
         );
         footerLayout.setVerticalGroup(
             footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -271,6 +307,14 @@ public class CardMember extends javax.swing.JDialog {
     public JLabel getQrCode() {
         return qrCode;
     }
+
+    public JLabel getExpirateDate() {
+        return expirateDate;
+    }
+
+    public JLabel getRoomName() {
+        return roomName;
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel address;
@@ -280,6 +324,7 @@ public class CardMember extends javax.swing.JDialog {
     private javax.swing.JPanel card;
     private javax.swing.JPanel center;
     private javax.swing.JPanel container;
+    private javax.swing.JLabel expirateDate;
     private javax.swing.JLabel firstName;
     private javax.swing.JPanel footer;
     private javax.swing.JLabel identity;
@@ -289,7 +334,12 @@ public class CardMember extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lastName;
     private javax.swing.JLabel qrCode;
+    private javax.swing.JLabel roomName;
     // End of variables declaration//GEN-END:variables
+
+   
 }

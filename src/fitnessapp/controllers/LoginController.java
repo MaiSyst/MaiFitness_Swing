@@ -74,7 +74,7 @@ public class LoginController {
                 Map<String, Object> body = new HashMap<>();
                 body.put("username", username.getText());
                 body.put("password", getTextPassword(password));
-
+                this.signInButton.setEnabled(false);
                 API.fetch().post("/auth/signIn", body).then((result, status) -> {
 
                     if (status == ResponseStatusCode.OK) {
@@ -98,16 +98,16 @@ public class LoginController {
                             public void run() {
                                 loader.setVisible(false);
                                 parent.dispose();
-                                if(auth.role().toLowerCase().equals("admin")){
+                                if (auth.role().toLowerCase().equals("admin")) {
                                     new Dashboard(auth).setVisible(true);
-                                }else{
+                                } else {
                                     new PublicDashboard(auth).setVisible(true);
                                 }
                             }
                         }, 1500L);
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, 1200, "Initialisation...");
                     } else {
-
+                        this.signInButton.setEnabled(false);
                         if (status == ResponseStatusCode.NOT_FOUND) {
                             Notifications.getInstance().show(Notifications.Type.ERROR, 3000, "Votre nom d'utilisateur ou mot de passe est incorrect.");
                         }
@@ -118,7 +118,7 @@ public class LoginController {
             } catch (MaiException e) {
                 Notifications.getInstance().show(Notifications.Type.ERROR, 3000, "Serveur n'est pas disponible.");
                 loader.setVisible(false);
-               
+                this.signInButton.setEnabled(false);
             }
 
         }

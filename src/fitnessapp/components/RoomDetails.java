@@ -104,7 +104,7 @@ public class RoomDetails extends javax.swing.JDialog {
 
         container.setBackground(new java.awt.Color(255, 255, 255));
         container.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 153, 0), 2, true));
-        container.setLayout(new java.awt.BorderLayout());
+        container.setLayout(new java.awt.BorderLayout(10, 0));
 
         header.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         header.setOpaque(false);

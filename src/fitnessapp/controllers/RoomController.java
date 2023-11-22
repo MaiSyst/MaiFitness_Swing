@@ -16,7 +16,6 @@ import fitnessapp.components.MaiCardMini;
 import fitnessapp.models.CustomerModel;
 import fitnessapp.models.PlanningModel;
 import fitnessapp.models.RoomModel;
-import fitnessapp.models.RoomWithSubscribeModel;
 import fitnessapp.models.UserModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
@@ -26,6 +25,7 @@ import java.awt.event.KeyEvent;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -37,20 +37,15 @@ import raven.toast.Notifications;
  *
  * @author orion90
  */
-public class RoomController implements MaiState {
+public final class RoomController implements MaiState {
 
-    private JButton addRoom;
-    private JPanel body;
-    private JTextField search;
-    private JFrame parent;
+    private final JPanel body;
+    private final JFrame parent;
     private final MaiFetch fetch;
-    private static List<RoomWithSubscribeModel> dataList = new ArrayList<>();
+    private static final Logger logger = Logger.getLogger(RoomController.class.getName());
 
-    public RoomController(JFrame parent, JButton addRoom, JPanel body, JTextField search, String token) {
-
-        this.addRoom = addRoom;
+    public RoomController(final JFrame parent, final JButton addRoom, final JPanel body, final JTextField search, final String token) {
         this.body = body;
-        this.search = search;
         this.parent = parent;
         fetch = API.fetch(new Authorization(token));
         addRoom.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "plus.svg", 1f));
@@ -60,7 +55,7 @@ public class RoomController implements MaiState {
         search.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                super.keyTyped(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                super.keyTyped(e);
                 if (search.getText().length() > 0) {
                     searchIt(search.getText());
                 } else {
@@ -74,7 +69,7 @@ public class RoomController implements MaiState {
 
     }
 
-    private void deleteRoom(String roomId) {
+    private void deleteRoom(final String roomId) {
         var option = JOptionPane.showConfirmDialog(parent, "Etes-vous de supprimer?", "Suppression", JOptionPane.OK_CANCEL_OPTION);
         if (option == JOptionPane.OK_OPTION) {
             try {
@@ -83,19 +78,19 @@ public class RoomController implements MaiState {
                         Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Salle à été supprimé:");
                         reFetchRoom();
                     } else {
-                        System.out.println(result);
                         Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Error de suppression:");
 
                     }
                 });
-            } catch (Exception e) {
+            } catch (MaiException e) {
+                logger.info(e.getMessage());
             }
         }
     }
 
-    private void editRoom(String roomId, String roomName) {
+    private void editRoom(final String roomId, final String roomName) {
         new RoomModalController(fetch, roomName, roomId,
-                args -> editToRoomPanel(args[0].toString(), 
+                args -> editToRoomPanel(args[0].toString(),
                         args[1].toString())).show(parent);
 
     }
@@ -111,7 +106,7 @@ public class RoomController implements MaiState {
                     List<RoomModel> models = gson.fromJson(result, roomListType);
                     for (var model : models) {
 
-                        var desc = model.planning().size() > 1 ? model.planning().size() + " Plannings" : model.planning().size() + " Planning";
+                        var desc = model.customers().size() > 1 ? model.customers().size() + " abonnés" : model.customers().size() + " abonné";
                         MaiCardMini maiCardMini = new MaiCardMini(model.roomName(), desc, model.roomId(),
                                 args -> editRoom(args[0], args[1]),
                                 args -> deleteRoom(args[0]),
@@ -129,12 +124,12 @@ public class RoomController implements MaiState {
             });
 
         } catch (MaiException e) {
-            System.out.println(e.getMessage());
+            logger.info(e.getMessage());
         }
 
     }
 
-    private void addToRoomPanel(String roomId, String roomName) {
+    private void addToRoomPanel(final String roomId, final String roomName) {
         MaiCardMini maiCardMini = new MaiCardMini(
                 roomName,
                 "0 Plannings",
@@ -147,7 +142,7 @@ public class RoomController implements MaiState {
         body.repaint();
     }
 
-    private void editToRoomPanel(String roomId, String roomName) {
+    private void editToRoomPanel(final String roomId, final String roomName) {
 
         for (int i = 0; i < body.getComponentCount(); i++) {
             MaiCardMini v = (MaiCardMini) body.getComponent(i);
@@ -161,7 +156,7 @@ public class RoomController implements MaiState {
 
     }
 
-    private void searchIt(String query) {
+    private void searchIt(final String query) {
         for (var comp : body.getComponents()) {
             var card = (MaiCardMini) comp;
             comp.setVisible(card.title().trim().toLowerCase().contains(query.trim().toLowerCase()));
@@ -179,7 +174,8 @@ public class RoomController implements MaiState {
         reFetchRoom();
     }
 
-    private void showDetailRoom(String roomName, List<PlanningModel> plannings, List<CustomerModel> customers, UserModel manager) {
+    private void showDetailRoom(final String roomName, final List<PlanningModel> plannings,
+            final List<CustomerModel> customers, final UserModel manager) {
         if (manager != null) {
             new RoomDetailsController(parent,
                     roomName,

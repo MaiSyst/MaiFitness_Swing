@@ -77,7 +77,8 @@ public final class PlanningController {
             final JButton addNewPlanning,
             final JTable tablePlanning,
             final JLabel numberPlanningSelectJLabel,
-            final String token, final MaiState maiState) {
+            final String token,
+            final MaiState maiState, final boolean isAdmin) {
 
         this.filterDay = filterDay;
         this.filterActivity = filterActivity;
@@ -100,42 +101,45 @@ public final class PlanningController {
             removePlannig.addActionListener(l -> activitySuppression());
         }
         refreshDataTable();
-        tablePlanning.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                changeSelectedActivities();
-                if (e.getClickCount() == 2) {
-                    var row = tablePlanning.getSelectedRow();
-                    var planningId = tablePlanning.getValueAt(row, 0).toString();
-                    var day = tablePlanning.getValueAt(row, 1).toString();
-                    var hStart = tablePlanning.getValueAt(row, 2).toString();
-                    var hEnd = tablePlanning.getValueAt(row, 3).toString();
-                    var activity = tablePlanning.getValueAt(row, 4).toString();
-                    var room = tablePlanning.getValueAt(row, 5).toString();
-                    showEditModal(planningId, day, hStart, hEnd, activity, room);
+        if (isAdmin) {
+            tablePlanning.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+
+                    if (e.getClickCount() == 2) {
+                        var row = tablePlanning.getSelectedRow();
+                        var planningId = tablePlanning.getValueAt(row, 0).toString();
+                        var day = tablePlanning.getValueAt(row, 1).toString();
+                        var hStart = tablePlanning.getValueAt(row, 2).toString();
+                        var hEnd = tablePlanning.getValueAt(row, 3).toString();
+                        var activity = tablePlanning.getValueAt(row, 4).toString();
+                        var room = tablePlanning.getValueAt(row, 5).toString();
+                        showEditModal(planningId, day, hStart, hEnd, activity, room);
+                    }
                 }
-            }
 
-        });
-        tablePlanning.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                super.keyReleased(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                changeSelectedActivities();
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-                super.keyPressed(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                changeSelectedActivities();
-                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                    activitySuppression();
+            });
+            tablePlanning.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    super.keyReleased(e);
+                    changeSelectedPlannings();
                 }
-            }
 
-        });
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                    super.keyPressed(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+                    changeSelectedPlannings();
+                    if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                        activitySuppression();
+                    }
+                }
+
+            });
+
+        }
         filterActivity.addItemListener(l -> {
             if (l.getStateChange() == ItemEvent.SELECTED) {
                 filterTable(l.getItem().toString().trim().toLowerCase(), FilterTable.ACTIVITY);
@@ -234,7 +238,7 @@ public final class PlanningController {
         }
     }
 
-    private void changeSelectedActivities() {
+    private void changeSelectedPlannings() {
         if (tablePlanning.getSelectedRows().length != 0) {
             numberPlanningSelectJLabel.setText("( " + tablePlanning.getSelectedRows().length + " )");
             numberPlanningSelectJLabel.setForeground(Color.BLACK);

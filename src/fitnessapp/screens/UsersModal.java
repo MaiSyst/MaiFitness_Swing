@@ -367,8 +367,9 @@ public class UsersModal extends javax.swing.JDialog {
             .addGroup(phoneContainerLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(phoneContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(phoneNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(phoneNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
         phoneContainerLayout.setVerticalGroup(
             phoneContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -398,8 +399,11 @@ public class UsersModal extends javax.swing.JDialog {
             .addGroup(passwordContainerLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(passwordContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(password, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(passwordContainerLayout.createSequentialGroup()
+                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(8, 8, 8)))
+                .addGap(44, 44, 44))
         );
         passwordContainerLayout.setVerticalGroup(
             passwordContainerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -430,8 +434,12 @@ public class UsersModal extends javax.swing.JDialog {
             .addGroup(passwordContainer1Layout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(passwordContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(confPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(passwordContainer1Layout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(42, 42, 42))
+                    .addGroup(passwordContainer1Layout.createSequentialGroup()
+                        .addComponent(confPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(45, Short.MAX_VALUE))))
         );
         passwordContainer1Layout.setVerticalGroup(
             passwordContainer1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -4,8 +4,12 @@
  */
 package fitnessapp.models;
 
+import java.util.List;
+
 /**
  *
  * @author orion90
  */
-public record CustomerModel(String customerId,String firstName,String lastName,String yearOfBirth,String address,String identityEMF) {}
+public record CustomerWithSubscribesModel(String customerId,
+        String firstName,String lastName,String yearOfBirth,
+        String address,String identityEMF,String roomName,List<SubscribeInCustomerModel>subscribes) {}

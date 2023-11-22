@@ -8,4 +8,5 @@ package fitnessapp.models;
  *
  * @author orion90
  */
-public record CustomerModel(String customerId,String firstName,String lastName,String yearOfBirth,String address,String identityEMF) {}
+public record CustomerModel(String customerId,String firstName,String lastName,
+        String yearOfBirth,String address,String identityEMF) {}

@@ -21,7 +21,6 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import fitnessapp.utilities.MaiCardButtonEvent;
-import java.awt.event.KeyAdapter;
 
 /**
  *

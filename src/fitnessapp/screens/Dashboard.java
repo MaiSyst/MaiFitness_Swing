@@ -17,11 +17,10 @@ import fitnessapp.controllers.SubscriptionController;
 import fitnessapp.controllers.UserController;
 import fitnessapp.models.AuthResponse;
 import fitnessapp.utilities.Constants;
-import fitnessapp.utilities.Database;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import raven.toast.Notifications;
 
 /**
@@ -33,8 +32,8 @@ public class Dashboard extends javax.swing.JFrame {
     /**
      * Creates new form Dashboard
      */
-    private final String styleCard = "arc:20;";
-    private final String flatStyle = FlatClientProperties.STYLE;
+    private static final String STYLE_CARD = "arc:20;";
+    private static final String FLAT_STYLE = FlatClientProperties.STYLE;
     private final ActivityController activityController;
     private final RoomController roomController;
     private final MemberController memberController;
@@ -49,7 +48,6 @@ public class Dashboard extends javax.swing.JFrame {
     public Dashboard(AuthResponse authResponse) {
         this.authResponse = authResponse;
         initComponents();
-
         activityController = new ActivityController(this, btnAddActivity, inputSearchActivity,
                 btnDeleteActivity, tableActivity,
                 authResponse.token(),
@@ -60,17 +58,20 @@ public class Dashboard extends javax.swing.JFrame {
                 numberSubscribeStandard, numberSubscribeGold,
                 numberSubscribePrime,
                 annualMontant,
+                btnRefreshHome,
                 tableSubscribeActive, authResponse.token());
         memberController = new MemberController(btnDeleteMember,
                 btnAddMember, tableMember, inputSearchMember,
-                this, authResponse.token(), controller);
+                this,btnResubcribe, authResponse.token(), controller);
         coachController = new CoachController(
                 inputSearchCoach,
                 btnDeleteCoach,
                 btnAddCoach,
                 tableCoach,
                 numberCoachSelected,
-                authResponse.token(), this, filterActivityCoach);
+                authResponse.token(), this, 
+                filterActivityCoach,
+                true);
         subscriptionController = new SubscriptionController(this,
                 standardCard,
                 primeCard,
@@ -89,7 +90,8 @@ public class Dashboard extends javax.swing.JFrame {
                 btnDeletePlanning,
                 btnAddPlanning, tablePlanning,
                 numberPlanningSelected, authResponse.token(),
-                roomController
+                roomController,
+                true
         );
         this.addMouseListener(new MouseAdapter() {
             @Override
@@ -103,7 +105,7 @@ public class Dashboard extends javax.swing.JFrame {
         });
         signOut.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "accountUser.svg"));
         signOut.addActionListener(l -> {
-            accountPopupController = new AccountPopupController(this, signOut.getLocation());
+            accountPopupController = new AccountPopupController(this,authResponse.token(),authResponse.username(), signOut.getLocation());
             accountPopupController.show();
 
         });
@@ -126,13 +128,18 @@ public class Dashboard extends javax.swing.JFrame {
         menu.setIconAt(6, new FlatSVGIcon(Constants.ICONS_PATH + "user.svg"));
         menu.setIconAt(7, new FlatSVGIcon(Constants.ICONS_PATH + "subscription.svg"));
         menu.putClientProperty("FlatLaf.style", "font: semibold $h3.regular.font;");
-        subscribeInfo.putClientProperty(flatStyle, styleCard + "background:#00ff7f30");
-        subscribeInfoTotal.putClientProperty(flatStyle, styleCard + "background:#ff557f30");
-        subscribeInfoMoney.putClientProperty(flatStyle, styleCard + "background:#aa55ff30");
+        subscribeInfo.putClientProperty(FLAT_STYLE, STYLE_CARD + "background:#00ff7f30");
+        subscribeInfoTotal.putClientProperty(FLAT_STYLE, STYLE_CARD + "background:#ff557f30");
+        subscribeInfoMoney.putClientProperty(FLAT_STYLE, STYLE_CARD + "background:#aa55ff30");
         Notifications.getInstance().setJFrame(this);
+        menu.addChangeListener(l->{
+            JTabbedPane tabbed=(JTabbedPane)l.getSource();
+            btnRefreshHome.setVisible(tabbed.getSelectedIndex()==0);
+        });
 
     }
-
+   
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -148,6 +155,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         signOut = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
+        btnRefreshHome = new javax.swing.JButton();
         menu = new javax.swing.JTabbedPane();
         home = new javax.swing.JPanel();
         homeContainer = new javax.swing.JPanel();
@@ -209,6 +217,7 @@ public class Dashboard extends javax.swing.JFrame {
         inputSearchMember = new javax.swing.JTextField();
         memberHeaderRight = new javax.swing.JPanel();
         btnAddMember = new javax.swing.JButton();
+        btnResubcribe = new javax.swing.JButton();
         room = new javax.swing.JPanel();
         roomContainer = new javax.swing.JPanel();
         roomMain = new javax.swing.JPanel();
@@ -290,6 +299,10 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/fitnessapp/icons/chevronDown.png"))); // NOI18N
 
+        btnRefreshHome.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        btnRefreshHome.setForeground(new java.awt.Color(102, 204, 0));
+        btnRefreshHome.setText("Refresh");
+
         javax.swing.GroupLayout headerLayout = new javax.swing.GroupLayout(header);
         header.setLayout(headerLayout);
         headerLayout.setHorizontalGroup(
@@ -297,7 +310,9 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(headerLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1057, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 842, Short.MAX_VALUE)
+                .addComponent(btnRefreshHome, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(58, 58, 58)
                 .addComponent(signOut, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(5, 5, 5)
                 .addComponent(jLabel2)
@@ -308,6 +323,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(headerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnRefreshHome, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1)
                     .addGroup(headerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -806,11 +822,11 @@ public class Dashboard extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Prenom", "Nom", "Date de naissance", "Adresse", "Action"
+                "ID", "Prenom", "Nom", "Date de naissance", "Adresse", "Action", "CustomerId", "RoomName", "Expirate"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, true
+                false, false, false, false, false, true, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -882,12 +898,18 @@ public class Dashboard extends javax.swing.JFrame {
         btnAddMember.setMinimumSize(new java.awt.Dimension(106, 50));
         btnAddMember.setPreferredSize(new java.awt.Dimension(106, 50));
 
+        btnResubcribe.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        btnResubcribe.setForeground(new java.awt.Color(102, 204, 0));
+        btnResubcribe.setText("Réabonné");
+
         javax.swing.GroupLayout memberHeaderRightLayout = new javax.swing.GroupLayout(memberHeaderRight);
         memberHeaderRight.setLayout(memberHeaderRightLayout);
         memberHeaderRightLayout.setHorizontalGroup(
             memberHeaderRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(memberHeaderRightLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
+                .addContainerGap()
+                .addComponent(btnResubcribe)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAddMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -895,7 +917,9 @@ public class Dashboard extends javax.swing.JFrame {
             memberHeaderRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, memberHeaderRightLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAddMember, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(memberHeaderRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnAddMember, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnResubcribe, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(23, 23, 23))
         );
 
@@ -1497,6 +1521,8 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton btnDeleteMember;
     private javax.swing.JButton btnDeletePlanning;
     private javax.swing.JButton btnDeleteUser;
+    private javax.swing.JButton btnRefreshHome;
+    private javax.swing.JButton btnResubcribe;
     private javax.swing.JPanel centerHeader;
     private javax.swing.JPanel coach;
     private javax.swing.JPanel coachHeader;

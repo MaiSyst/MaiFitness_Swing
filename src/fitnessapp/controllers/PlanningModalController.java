@@ -166,7 +166,6 @@ public final class PlanningModalController {
             }
         }
     }
-
     private void editPlanning(final String planningId) {
         var activityId = ((ActivityModel) planningModal.getComboActivities().getSelectedItem()).activityId();
         var roomId = ((RoomWithSubscribeModel) planningModal.getComboRoom().getSelectedItem()).roomId();

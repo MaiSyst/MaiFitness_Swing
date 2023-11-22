@@ -4,6 +4,7 @@
  */
 package fitnessapp.controllers;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.maisyst.MaiFetch;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -40,7 +42,7 @@ public final class DashboardController implements MaiState{
     private List<SubscribeModel>dataList=new ArrayList<>();
     public DashboardController(final JLabel numberSubscribeActive, final JLabel numberSubscribeStandard,
             final JLabel numberSubscribeGold, final JLabel numberSubscribPrime, 
-            final JLabel montantAnnualSubscribe, final JTable table,String token) {
+            final JLabel montantAnnualSubscribe,final JButton btnRefreshSubscribe, final JTable table,String token) {
         this.numberSubscribeActive = numberSubscribeActive;
         this.numberSubscribeStandard = numberSubscribeStandard;
         this.numberSubscribeGold = numberSubscribeGold;
@@ -49,6 +51,8 @@ public final class DashboardController implements MaiState{
         this.table = table;
         fetch=API.fetch(new Authorization(token));
         fetchSubscribes();
+        btnRefreshSubscribe.addActionListener(l->fetchSubscribes());
+        btnRefreshSubscribe.setIcon(new FlatSVGIcon(Constants.ICONS_PATH+"resubscribe.svg"));
     }
     private void changeContentCardSubscribeInfo(){
        var response=dataList.stream().filter(item->item.isActive()).toList().size();

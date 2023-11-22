@@ -8,10 +8,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.maisyst.MaiFetch;
 import com.maisyst.date.MaiDate;
+import com.maisyst.date.MaiDateInfoType;
+import com.maisyst.date.MaiDateResponse;
 import com.maisyst.exceptions.MaiException;
 import com.maisyst.utils.Authorization;
 import com.maisyst.utils.enums.ResponseStatusCode;
 import fitnessapp.models.ActivityModel;
+import fitnessapp.models.CustomerModel;
+import fitnessapp.models.CustomerWithSubscribesModel;
+import fitnessapp.models.SubscribeInCustomerModel;
 import fitnessapp.models.SubscriptionModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
@@ -21,6 +26,8 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Type;
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +47,6 @@ import raven.toast.Notifications;
  */
 public class PublicDashboardController {
 
-    private final JTextField inputCheckCustomer;
-    private final JButton checkCustomerValidate;
     private MaiState maiState;
     private final JTextField firstName;
     private final JTextField lastName;
@@ -53,11 +58,13 @@ public class PublicDashboardController {
     private final JLabel msgFirstName;
     private final JLabel msgLastName;
     private final JLabel msgAddress;
-    private final JButton saveMember;
+    private final JLabel msgMontant;
     private final JFrame parent;
     private final MaiFetch fetch;
     private final Gson gson = new Gson();
     private final String roomId;
+    private List<SubscriptionModel> dataListSubscription = new ArrayList<>();
+
     public PublicDashboardController(
             final JFrame parent,
             final JTextField inputCheckCustomer,
@@ -74,14 +81,11 @@ public class PublicDashboardController {
             final JButton saveMember,
             final JLabel msgFirstName,
             final JLabel msgLastName,
-            final JLabel msgBirthdate,
             final JLabel msgAddress,
             final JLabel msgMontant,
             String token,
             String roomId
     ) {
-        this.checkCustomerValidate = checkCustomerValidate;
-        this.inputCheckCustomer = inputCheckCustomer;
         this.firstName = firstName;
         this.lastName = lastName;
         this.activities = activities;
@@ -89,10 +93,10 @@ public class PublicDashboardController {
         this.birthdate = birthdate;
         this.subscription = subscription;
         this.priceMontant = priceMontant;
-        this.saveMember = saveMember;
         this.msgAddress = msgAddress;
         this.msgFirstName = msgFirstName;
         this.msgLastName = msgLastName;
+        this.msgMontant=msgMontant;
         this.parent = parent;
         this.roomId = roomId;
         this.fetch = API.fetch(new Authorization(token));
@@ -101,23 +105,25 @@ public class PublicDashboardController {
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    System.out.println("Enter");
+                    checkMemberIdentity(inputCheckCustomer.getText());
                 }
             }
 
         });
+        checkCustomerValidate.addActionListener(l -> checkMemberIdentity(inputCheckCustomer.getText()));
         fetchSubscription();
         fetchActivities();
-        saveMember.addActionListener(l -> addNewMember());
+        
         var subsDefault = (SubscriptionModel) subscription.getSelectedItem();
         if (subsDefault != null) {
-
-            priceSubscription.setText(subsDefault.price()+" FCFA");
+            priceSubscription.setText(subsDefault.price() + " FCFA");
         }
+        saveMember.addActionListener(l -> addNewMember(Double.parseDouble(
+                priceSubscription.getText().split(" ")[0])));
         subscription.addItemListener(itemListener -> {
             if (itemListener.getStateChange() == ItemEvent.SELECTED) {
                 var subs = (SubscriptionModel) itemListener.getItem();
-                priceSubscription.setText(subs.price()+" FCFA");
+                priceSubscription.setText(subs.price() + " FCFA");
             }
         });
         priceMontant.addKeyListener(new KeyAdapter() {
@@ -133,7 +139,7 @@ public class PublicDashboardController {
                     if (substraction >= 0) {
                         remainPrice.setText(substraction + " FCFA");
                         msgMontant.setText("");
-                    }else{
+                    } else {
                         msgMontant.setText("Montant insuffisant.");
                         remainPrice.setText(0 + " FCFA");
                     }
@@ -143,7 +149,38 @@ public class PublicDashboardController {
         });
     }
 
-    private void addNewMember() {
+    private void checkMemberIdentity(String identity) {
+        if (identity.isBlank() || identity.length() != 16) {
+            Notifications.getInstance().show(Notifications.Type.INFO, "Numéro doit être 16 caracteurs.");
+        } else {
+            try {
+                fetch.get(Constants.CUSTOMER_CHECK_URL_PATH + "/" + roomId + "/" + identity).then((result, status) -> {
+                    if (status == ResponseStatusCode.OK) {
+                        CustomerWithSubscribesModel customer = gson.fromJson(result, CustomerWithSubscribesModel.class);
+                        new PopupValidateCustomerController(parent)
+                                .show(
+                                        identity,
+                                        customer.firstName(),
+                                        customer.lastName(),
+                                        subscribe(customer.subscribes()).split(" ")[0],
+                                        subscribe(customer.subscribes()).split(" ")[1],
+                                        validateMessage(subscribe(customer.subscribes()).split(" ")[1]),
+                                        subscribe(customer.subscribes()).split(" ")[2],
+                                        validateMessage(subscribe(customer.subscribes()).split(" ")[1]).contains("Valide"),
+                                        dataListSubscription,
+                                        fetch
+                                );
+                    } else {
+                        Notifications.getInstance().show(Notifications.Type.ERROR, "Désolé ce n'est pas un identifiant du membre EMFitness");
+                    }
+                });
+            } catch (MaiException ex) {
+                Notifications.getInstance().show(Notifications.Type.ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    private void addNewMember(double priceSubscription) {
         if (firstName.getText().isBlank() || lastName.getText().isBlank()
                 || address.getText().isBlank() || priceMontant.getText().isBlank()) {
             if (firstName.getText().isBlank()) {
@@ -169,28 +206,46 @@ public class PublicDashboardController {
             if (MaiDate.currentYears() - year < 5) {
                 JOptionPane.showMessageDialog(parent, "Désolé l'âge doit être supérieur à 5 ans");
             } else {
-                try {
-                    Map<String, Object> body = new HashMap<>();
-                    body.put("firstName", firstName.getText());
-                    body.put("lastName", lastName.getText());
-                    body.put("yearOfBirth", birthdate.getText());
-                    body.put("address", address.getText());
-                    var activity = (ActivityModel) activities.getSelectedItem();
-                    var subs = (SubscriptionModel) subscription.getSelectedItem();
-                    fetch.post(
-                            Constants.CUSTOMER_ADD_URL_PATH + subs.type() + "/" + activity.activityId() + "/" + roomId,
-                            body).then((result, status) -> {
-                                if (status == ResponseStatusCode.OK) {
-                                    Notifications.getInstance().show(Notifications.Type.SUCCESS, "Un membre à été ajouté.");
-                                    maiState.updateState();
-                                    clearInputText();
-                                } else {
-                                    Notifications.getInstance().show(Notifications.Type.ERROR, result);
+                var price=Integer.parseInt(priceMontant.getText());
+                if ( price== 0 || price >=priceSubscription) {
+                    try {
+                        Map<String, Object> body = new HashMap<>();
+                        body.put("firstName", firstName.getText());
+                        body.put("lastName", lastName.getText());
+                        body.put("yearOfBirth", birthdate.getText());
+                        body.put("address", address.getText());
+                        var activity = (ActivityModel) activities.getSelectedItem();
+                        var subs = (SubscriptionModel) subscription.getSelectedItem();
+                        fetch.post(
+                                Constants.CUSTOMER_ADD_URL_PATH + subs.type() + "/" + activity.activityId() + "/" + roomId,
+                                body).then((result, status) -> {
+                                    if (status == ResponseStatusCode.OK) {
+                                        Notifications.getInstance().show(Notifications.Type.SUCCESS, "Un membre à été ajouté.");
+                                        CustomerModel customerModel = gson.fromJson(result, CustomerModel.class);
+                                        maiState.updateState(
+                                                customerModel.identityEMF(),
+                                                customerModel.firstName(),
+                                                customerModel.lastName(),
+                                                customerModel.address(),
+                                                customerModel.yearOfBirth()
+                                        );
 
-                                }
-                            });
-                } catch (MaiException e) {
-                    Logger.getLogger(MemberModalController.class.getName(), e.getMessage());
+                                        clearInputText();
+                                    } else {
+                                        Notifications.getInstance().show(Notifications.Type.ERROR, result);
+
+                                    }
+                                });
+                    } catch (MaiException e) {
+                        Logger.getLogger(MemberModalController.class.getName(), e.getMessage());
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(
+                            parent, 
+                            "Montant est insuffisant pour cet abonnement.\n0 pour un montant égale à l'abonnement.",
+                            "Montants",
+                            JOptionPane.INFORMATION_MESSAGE
+                            );
                 }
             }
         }
@@ -202,7 +257,7 @@ public class PublicDashboardController {
         birthdate.setText("");
         address.setText("");
         priceMontant.setText("");
-
+       msgMontant.setText("");
     }
 
     private void fetchSubscription() {
@@ -211,10 +266,10 @@ public class PublicDashboardController {
                 if (status == ResponseStatusCode.OK) {
                     final Type subscriptionListType = new TypeToken<List<SubscriptionModel>>() {
                     }.getType();
-                    List<SubscriptionModel> models = gson.fromJson(result, subscriptionListType);
+                    dataListSubscription = gson.fromJson(result, subscriptionListType);
                     DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) subscription.getModel();
                     comboBoxModel.removeAllElements();
-                    models.forEach(model -> comboBoxModel.addElement(model));
+                    dataListSubscription.forEach(model -> comboBoxModel.addElement(model));
                     subscription.setRenderer(new MaiUtils.MaiComboxBoxCell());
                 }
             });
@@ -243,5 +298,22 @@ public class PublicDashboardController {
 
     public void subscribe(MaiState maiState) {
         this.maiState = maiState;
+    }
+
+    private String validateMessage(String dateEnd) {
+        MaiDateResponse response = MaiDate.compareBetween(Date.valueOf(dateEnd));
+        if (response.getInfoDays() == MaiDateInfoType.PASSED || response.getInfoDays() == MaiDateInfoType.EXPIRED) {
+            return "Abonnement est expiré";
+        }
+
+        return "Valide jusqu'à " + response.getRemainDays() + " Jours";
+    }
+
+    private String subscribe(List<SubscribeInCustomerModel> subscribes) {
+        if (subscribes.isEmpty()) {
+            return "";
+        } else {
+            return subscribes.get(0).dateStart() + " " + subscribes.get(0).dateEnd() + " " + subscribes.get(0).subscriptionType();
+        }
     }
 }

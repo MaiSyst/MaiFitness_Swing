@@ -69,6 +69,8 @@ public class ActivityModalController {
                             if (status == ResponseStatusCode.OK) {
                                 Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Une Activite a ete ajoute");
                                 refreshTable.refresh();
+                                activityModal.getLabelActivity().setText("");
+                                activityModal.getDescriptionActivity().setText("");
                             } else {
                                 if (result.toLowerCase().contains("duplicate")) {
                                     Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Cette actvite exist déjà.");

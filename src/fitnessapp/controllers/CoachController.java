@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import javax.swing.DefaultComboBoxModel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -47,9 +47,6 @@ import raven.toast.Notifications;
  */
 public class CoachController {
 
-    private final JTextField search;
-    private final JButton removeCoach;
-    private final JButton addCoach;
     private final JTable tableCoach;
     private final JLabel selectedItemTable;
     private final JFrame parent;
@@ -59,6 +56,7 @@ public class CoachController {
     }.getType();
     private static List<CoachModel> dataList = new ArrayList<>();
     private final Gson gson = new Gson();
+    private static final Logger logger = Logger.getLogger(CoachController.class.getName());
 
     public CoachController(final JTextField search, final JButton removeCoach,
             final JButton addCoach,
@@ -66,17 +64,15 @@ public class CoachController {
             final JLabel selectedItemTable,
             final String token,
             final JFrame parent,
-            final JComboBox<String> filterActivity
+            final JComboBox<String> filterActivity,
+            final boolean isAdmin
     ) {
-        this.search = search;
-        this.removeCoach = removeCoach;
-        this.addCoach = addCoach;
         this.parent = parent;
         this.tableCoach = tableCoach;
         this.selectedItemTable = selectedItemTable;
         this.filterActivity = filterActivity;
         this.fetch = API.fetch(new Authorization(token));
-        if(removeCoach!=null&&addCoach!=null){
+        if (removeCoach != null && addCoach != null) {
             addCoach.addActionListener(l -> onHandleShowModal());
             addCoach.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "plus.svg"));
             removeCoach.setIcon(new FlatSVGIcon(Constants.ICONS_PATH + "trash.svg"));
@@ -87,82 +83,83 @@ public class CoachController {
 
         dataRefreshTable();
         fetchActivities();
-        tableCoach.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusLost(FocusEvent e) {
-                super.focusLost(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                changeSelectedItems();
-            }
-
-        });
-        tableCoach.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                changeSelectedItems();
-                if (e.getClickCount() == 2) {
-                    var rows = tableCoach.getSelectedRow();
-                    var id = tableCoach.getValueAt(rows, 0).toString();
-                    var f = tableCoach.getValueAt(rows, 1).toString();
-                    var l = tableCoach.getValueAt(rows, 2).toString();
-                    var p = tableCoach.getValueAt(rows, 3).toString();
-                    var a = tableCoach.getValueAt(rows, 4).toString();
-                    var s = tableCoach.getValueAt(rows, 5).toString();
-                    showEditModal(id, f, l, p, a, s);
+        if (isAdmin) {
+            tableCoach.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusLost(FocusEvent e) {
+                    super.focusLost(e);
+                    changeSelectedItems();
                 }
-            }
 
-        });
-        tableCoach.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                super.keyReleased(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                changeSelectedItems();
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-                super.keyPressed(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                changeSelectedItems();
-                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                    activitySuppression();
+            });
+            tableCoach.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    changeSelectedItems();
+                    if (e.getClickCount() == 2) {
+                        var rows = tableCoach.getSelectedRow();
+                        var id = tableCoach.getValueAt(rows, 0).toString();
+                        var f = tableCoach.getValueAt(rows, 1).toString();
+                        var l = tableCoach.getValueAt(rows, 2).toString();
+                        var p = tableCoach.getValueAt(rows, 3).toString();
+                        var a = tableCoach.getValueAt(rows, 4).toString();
+                        var s = tableCoach.getValueAt(rows, 5).toString();
+                        showEditModal(id, f, l, p, a, s);
+                    }
                 }
-            }
 
-        });
+            });
+            tableCoach.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    super.keyReleased(e);
+                    changeSelectedItems();
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+
+                    super.keyPressed(e);
+                    changeSelectedItems();
+                    if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                        activitySuppression();
+                    }
+                }
+
+            });
+        }
         //Filter coach by activity
         filterActivity.addItemListener(l -> {
-            if (l.getStateChange()==SELECTED) {
-                var item=l.getItem().toString();
-                if(item.equals("Toutes les activites")){
+            if (l.getStateChange() == SELECTED) {
+                var item = l.getItem().toString();
+                if (item.equals("Toutes les activites")) {
                     insertToDataTable(dataList);
-                }
-                else{
+                } else {
                     filterCoachByActivity(item);
                 }
             }
         });
         //Search input
-        search.addKeyListener(new KeyAdapter(){
+        search.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
-                super.keyTyped(e); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
-                if(search.getText().isBlank()){
+                super.keyTyped(e);
+                if (search.getText().isBlank()) {
                     insertToDataTable(dataList);
-                }else{
-                    var query=search.getText();
-                  var response= dataList.stream()
-                          .filter(p->p.firstName().contains(query)||p.lastName().contains(query))
-                          .toList();
+                } else {
+                    var query = search.getText();
+                    var response = dataList.stream()
+                            .filter(p -> p.firstName().contains(query) || p.lastName().contains(query))
+                            .toList();
                     insertToDataTable(response);
                 }
             }
-            
+
         });
     }
 
     private void filterCoachByActivity(String query) {
-       var resp= dataList.stream().filter(f->f.speciality().equals(query)).toList();
+        var resp = dataList.stream().filter(f -> f.speciality().equals(query)).toList();
         insertToDataTable(resp);
     }
 
@@ -179,7 +176,7 @@ public class CoachController {
                 }
             });
         } catch (MaiException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -213,7 +210,7 @@ public class CoachController {
                 }
             });
         } catch (MaiException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -226,7 +223,7 @@ public class CoachController {
                 }
             });
         } catch (MaiException e) {
-            System.out.println(e.getMessage());
+            logger.log(Level.SEVERE, e.getMessage());
         }
     }
 
@@ -268,7 +265,7 @@ public class CoachController {
             String address,
             String speciality) {
         new CoachModalController(fetch, coachId, firstName, lastName,
-                 phone, address, speciality,
+                phone, address, speciality,
                 this::dataRefreshTable).show();
     }
 
