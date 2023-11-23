@@ -15,6 +15,7 @@ import com.maisyst.utils.enums.ResponseStatusCode;
 import fitnessapp.models.UserModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
+import fitnessapp.utilities.MaiState;
 import java.awt.Color;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -41,7 +42,7 @@ import raven.toast.Notifications;
  *
  * @author maisyst
  */
-public class UserController {
+public class UserController implements MaiState{
 
     private final JButton addUsers;
     private final JButton removeUsers;
@@ -52,14 +53,15 @@ public class UserController {
     private List<UserModel> dataList = new ArrayList<>();
     private final Gson gson = new Gson();
     private final JFrame parent;
-
+    private final MaiState state;
     public UserController(final JFrame parent, JButton addUsers, JButton removeUsers,
             JTextField searchUsers, JLabel selectedNumberUsersToRemove,
-            JTable table, final String token) {
+            JTable table, final String token,MaiState state) {
         this.addUsers = addUsers;
         this.removeUsers = removeUsers;
         this.searchUsers = searchUsers;
         this.parent = parent;
+        this.state=state;
         fetch = API.fetch(new Authorization(token));
         this.selectedNumberUsersToRemove = selectedNumberUsersToRemove;
         this.table = table;
@@ -215,6 +217,7 @@ public class UserController {
 
     private void onHandleEditShowModal() {
         var row=table.getSelectedRow();
+        var username=table.getValueAt(row, 0).toString();
         var firstName=table.getValueAt(row, 1).toString();
         var lastName=table.getValueAt(row, 2).toString();
         var date=table.getValueAt(row, 3).toString();
@@ -222,7 +225,7 @@ public class UserController {
         var phone=table.getValueAt(row, 5).toString();
         var roomName=table.getValueAt(row,6).toString();
         
-        new UserModalController(fetch,firstName,lastName,address,phone,date,roomName, this::requestDataTable).show();
+        new UserModalController(fetch,firstName,lastName,address,phone,date,roomName,username, this::requestDataTable).show();
     }
 
     private void onSearchUser(final String query) {
@@ -240,6 +243,7 @@ public class UserController {
                     }.getType();
                     dataList = gson.fromJson(result, listUserModel);
                     insertDataTable(dataList);
+                    state.updateState();
                 }
             });
             changeSelectedItems();
@@ -266,6 +270,11 @@ public class UserController {
         table.getColumnModel().getColumn(8).setMaxWidth(0);
         table.getColumnModel().getColumn(8).setMinWidth(0);
         table.getColumnModel().getColumn(8).setPreferredWidth(0);
+    }
+
+    @Override
+    public void updateState(Object... args) {
+        requestDataTable();
     }
     
 }

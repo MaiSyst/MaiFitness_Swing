@@ -8,6 +8,8 @@ import fitnessapp.models.ActivityModel;
 import fitnessapp.models.RoomWithSubscribeModel;
 import fitnessapp.models.SubscriptionModel;
 import java.awt.Component;
+import java.text.NumberFormat;
+import java.util.Locale;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.JPasswordField;
@@ -84,5 +86,10 @@ public final class MaiUtils {
             default ->
                 null;
         };
+    }
+    
+    public static String numberFormat(Object money){
+        NumberFormat nf=NumberFormat.getCurrencyInstance(Locale.GERMAN);
+        return nf.format(money).split(",")[0];
     }
 }

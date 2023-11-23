@@ -14,6 +14,7 @@ import com.maisyst.utils.enums.ResponseStatusCode;
 import fitnessapp.models.SubscriptionModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
+import fitnessapp.utilities.MaiUtils;
 import java.lang.reflect.Type;
 import java.util.List;
 import javax.swing.JFrame;
@@ -86,15 +87,15 @@ public class SubscriptionController {
         switch (type) {
             case "PRIME"->{
                 this.primeMonth.setText(month);
-                this.primePrice.setText(String.valueOf(price)+"FCFA");
+                this.primePrice.setText(MaiUtils.numberFormat(price)+" FCFA");
             }
             case "STANDARD"->{
                 this.standardMonth.setText(month);
-                this.standardPrice.setText(String.valueOf(price)+"FCFA");
+                this.standardPrice.setText(MaiUtils.numberFormat(price)+" FCFA");
             }
             default->{
                 this.goldMonth.setText(month);
-                this.goldPrice.setText(String.valueOf(price)+"FCFA");
+                this.goldPrice.setText(MaiUtils.numberFormat(price)+" FCFA");
             }
         }
     }

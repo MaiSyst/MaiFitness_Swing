@@ -16,6 +16,7 @@ import fitnessapp.models.ActivityModel;
 import fitnessapp.models.CoachModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
+import fitnessapp.utilities.MaiState;
 import java.awt.Color;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -45,7 +46,7 @@ import raven.toast.Notifications;
  *
  * @author orion90
  */
-public class CoachController {
+public class CoachController implements MaiState{
 
     private final JTable tableCoach;
     private final JLabel selectedItemTable;
@@ -258,7 +259,8 @@ public class CoachController {
         new CoachModalController(fetch, this::dataRefreshTable).show();
     }
 
-    private void showEditModal(String coachId,
+    private void showEditModal(
+            String coachId,
             String firstName,
             String lastName,
             String phone,
@@ -269,4 +271,9 @@ public class CoachController {
                 this::dataRefreshTable).show();
     }
 
+    @Override
+    public void updateState(Object... args) {
+        dataRefreshTable();
+    }
+    
 }

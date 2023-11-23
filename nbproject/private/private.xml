@@ -3,10 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/controllers/LoginController.java</file>
-            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/components/CardMember.java</file>
-            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/controllers/MemberController.java</file>
-            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/controllers/CardMemberController.java</file>
+            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/controllers/RoomDetailsController.java</file>
+            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/controllers/UserModalController.java</file>
+            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/utilities/Constants.java</file>
+            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/controllers/DashboardController.java</file>
+            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/screens/Dashboard.java</file>
+            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/FitnessApp.java</file>
+            <file>file:/home/maisyst/Documents/MaiSYST_Projects/MaiFitness_Swing/src/fitnessapp/controllers/UserController.java</file>
         </group>
     </open-files>
 </project-private>

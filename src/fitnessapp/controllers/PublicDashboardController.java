@@ -123,7 +123,7 @@ public class PublicDashboardController {
         subscription.addItemListener(itemListener -> {
             if (itemListener.getStateChange() == ItemEvent.SELECTED) {
                 var subs = (SubscriptionModel) itemListener.getItem();
-                priceSubscription.setText(subs.price() + " FCFA");
+                priceSubscription.setText(MaiUtils.numberFormat(subs.price()) + " FCFA");
             }
         });
         priceMontant.addKeyListener(new KeyAdapter() {
@@ -135,9 +135,10 @@ public class PublicDashboardController {
                 }
                 var price = priceMontant.getText();
                 if (!price.isBlank()) {
-                    var substraction = Double.parseDouble(price) - Double.parseDouble(priceSubscription.getText().split(" ")[0]);
+                    var substraction = Double.parseDouble(price) - Double.parseDouble(priceSubscription.getText()
+                            .replaceAll(".", "").split(" ")[0]);
                     if (substraction >= 0) {
-                        remainPrice.setText(substraction + " FCFA");
+                        remainPrice.setText(MaiUtils.numberFormat(substraction) + " FCFA");
                         msgMontant.setText("");
                     } else {
                         msgMontant.setText("Montant insuffisant.");

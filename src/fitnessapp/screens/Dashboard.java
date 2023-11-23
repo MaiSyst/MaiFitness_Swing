@@ -52,14 +52,20 @@ public class Dashboard extends javax.swing.JFrame {
                 btnDeleteActivity, tableActivity,
                 authResponse.token(),
                 numberActivitiesSelected);
-        roomController = new RoomController(this,
-                btnAddRoom, roomBody, inputSearchRoom, authResponse.token());
+        
         controller = new DashboardController(suscribeActiveInfo,
                 numberSubscribeStandard, numberSubscribeGold,
                 numberSubscribePrime,
                 annualMontant,
                 btnRefreshHome,
                 tableSubscribeActive, authResponse.token());
+        roomController = new RoomController(
+                this,
+                btnAddRoom, roomBody, 
+                inputSearchRoom, 
+                authResponse.token(),
+                controller.getDataList()
+        );
         memberController = new MemberController(btnDeleteMember,
                 btnAddMember, tableMember, inputSearchMember,
                 this,btnResubcribe, authResponse.token(), controller);
@@ -113,8 +119,13 @@ public class Dashboard extends javax.swing.JFrame {
                 this,
                 btnAddUser,
                 btnDeleteUser, inputSearchUser,
-                numberUsersSelected, tableUsers,
-                authResponse.token());
+                numberUsersSelected, 
+                tableUsers,
+                authResponse.token(),
+                roomController
+        );
+        roomController.subscribe(userController,planningController);
+        activityController.subscribe(coachController,planningController);
         init();
     }
 
@@ -357,7 +368,7 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
         jLabel3.setText("Abonnés");
 
-        suscribeActiveInfo.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        suscribeActiveInfo.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
         suscribeActiveInfo.setText("100 abonnes active");
 
         javax.swing.GroupLayout subscribeInfoLayout = new javax.swing.GroupLayout(subscribeInfo);
@@ -376,7 +387,7 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, subscribeInfoLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 35, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addComponent(suscribeActiveInfo)
                 .addGap(61, 61, 61))
         );
@@ -388,13 +399,13 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
         jLabel4.setText("Abonnés par type");
 
-        numberSubscribeStandard.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        numberSubscribeStandard.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
         numberSubscribeStandard.setText("* 10 abonnés standard");
 
-        numberSubscribePrime.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        numberSubscribePrime.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
         numberSubscribePrime.setText("* 5 abonnés prime");
 
-        numberSubscribeGold.setFont(new java.awt.Font("SF Pro Display", 0, 18)); // NOI18N
+        numberSubscribeGold.setFont(new java.awt.Font("SansSerif", 0, 20)); // NOI18N
         numberSubscribeGold.setText("* 20 abonnés gold");
 
         javax.swing.GroupLayout subscribeInfoTotalLayout = new javax.swing.GroupLayout(subscribeInfoTotal);
@@ -419,11 +430,11 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(numberSubscribeStandard)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(numberSubscribePrime)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(numberSubscribeGold)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
 
         infoContainer.add(subscribeInfoTotal);
@@ -433,7 +444,8 @@ public class Dashboard extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
         jLabel6.setText("Montants global");
 
-        annualMontant.setFont(new java.awt.Font("SF Pro Display", 1, 24)); // NOI18N
+        annualMontant.setFont(new java.awt.Font("SansSerif", 1, 30)); // NOI18N
+        annualMontant.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         annualMontant.setText("1.000.000 FCFA");
 
         javax.swing.GroupLayout subscribeInfoMoneyLayout = new javax.swing.GroupLayout(subscribeInfoMoney);
@@ -441,10 +453,13 @@ public class Dashboard extends javax.swing.JFrame {
         subscribeInfoMoneyLayout.setHorizontalGroup(
             subscribeInfoMoneyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(subscribeInfoMoneyLayout.createSequentialGroup()
-                .addGap(46, 46, 46)
                 .addGroup(subscribeInfoMoneyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(annualMontant, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(subscribeInfoMoneyLayout.createSequentialGroup()
+                        .addGap(46, 46, 46)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(subscribeInfoMoneyLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(annualMontant, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         subscribeInfoMoneyLayout.setVerticalGroup(
@@ -454,7 +469,7 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addGap(41, 41, 41)
                 .addComponent(annualMontant)
-                .addContainerGap(60, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         infoContainer.add(subscribeInfoMoney);

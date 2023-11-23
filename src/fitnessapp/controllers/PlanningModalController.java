@@ -98,9 +98,7 @@ public final class PlanningModalController {
                     List<ActivityModel> models = gson.fromJson(result, activityListType);
                     DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) planningModal.getComboActivities().getModel();
                     comboBoxModel.removeAllElements();
-                    models.forEach(model -> {
-                        comboBoxModel.addElement(model);
-                    });
+                    models.forEach(model -> comboBoxModel.addElement(model));
                     planningModal.getComboActivities().setRenderer(new MaiComboxBoxCell());
                 }
             });
@@ -118,9 +116,7 @@ public final class PlanningModalController {
                     List<RoomWithSubscribeModel> models = gson.fromJson(result, roomListType);
                     DefaultComboBoxModel comboBoxModel = (DefaultComboBoxModel) planningModal.getComboRoom().getModel();
                     comboBoxModel.removeAllElements();
-                    models.forEach(model -> {
-                        comboBoxModel.addElement(model);
-                    });
+                    models.forEach(model ->  comboBoxModel.addElement(model));
                     planningModal.getComboRoom().setRenderer(new MaiComboxBoxCell());
                 }
             });
@@ -145,7 +141,6 @@ public final class PlanningModalController {
             var heureEnd = planningModal.getComboHourEnd().getSelectedItem().toString() + ":" + planningModal.getComboMMEnd().getSelectedItem().toString();
 
             try {
-                System.out.println(day);
                 Map<String, Object> body = new HashMap<>();
                 body.put("day", MaiUtils.dateToEnglish(day));
                 body.put("startTime", heureStart + ":00");

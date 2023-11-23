@@ -15,6 +15,7 @@ import fitnessapp.models.SubscribeModel;
 import fitnessapp.utilities.API;
 import fitnessapp.utilities.Constants;
 import fitnessapp.utilities.MaiState;
+import fitnessapp.utilities.MaiUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public final class DashboardController implements MaiState{
     private final MaiFetch fetch;
     private final Type listTypeSubscribe=new TypeToken<List<SubscribeModel>>(){}.getType();
     private final Gson gson=new Gson();
-    private List<SubscribeModel>dataList=new ArrayList<>();
+    public List<SubscribeModel>dataList=new ArrayList<>();
     public DashboardController(final JLabel numberSubscribeActive, final JLabel numberSubscribeStandard,
             final JLabel numberSubscribeGold, final JLabel numberSubscribPrime, 
             final JLabel montantAnnualSubscribe,final JButton btnRefreshSubscribe, final JTable table,String token) {
@@ -69,7 +70,7 @@ public final class DashboardController implements MaiState{
     private void calculTotalMontant(){
         AtomicLong sum=new AtomicLong();
         dataList.forEach(item->sum.addAndGet((long) item.subscription().price()));
-        montantAnnualSubscribe.setText(sum.get()+" FCFA");
+        montantAnnualSubscribe.setText(MaiUtils.numberFormat(sum.get())+" FCFA");
     }
     private void fetchSubscribes(){
         try {
@@ -103,5 +104,10 @@ public final class DashboardController implements MaiState{
     public void updateState(Object... args) {
         fetchSubscribes();
     }
+
+    public List<SubscribeModel> getDataList() {
+        return dataList;
+    }
+    
     
 }

@@ -15,8 +15,10 @@ import fitnessapp.screens.Dashboard;
 import fitnessapp.screens.Login;
 import fitnessapp.screens.PublicDashboard;
 import fitnessapp.utilities.API;
+import fitnessapp.utilities.Constants;
 import fitnessapp.utilities.Database;
 import java.awt.Font;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import raven.toast.Notifications;
@@ -81,22 +84,27 @@ public class FitnessApp {
             }
             if (rs.next()) {
                 checkToken(rs.getString("authToken"))
-                        .ifPresentOrElse(authResponse -> {
+                        .ifPresentOrElse(authResponse -> 
                                     SwingUtilities.invokeLater(() -> {
-                                        if (authResponse.role().toLowerCase().equals("admin")) {
-                                            new Dashboard(authResponse).setVisible(true);
+                                        try{
+                                            if (authResponse.role().toLowerCase().equals("admin")) {
+                                            Dashboard dashboard=new Dashboard(authResponse);
+                                            dashboard.setIconImage(
+                                                    ImageIO.read(new File(Constants.ICONS_PATH+"emf50x50.png")));
+                                            dashboard.setVisible(true);
                                         } else {
                                             new PublicDashboard(authResponse).setVisible(true);
                                         }
+                                        }
+                                        catch(Exception e){}
 
                                         splashScreen.dispose();
-                                    });
-                                },
+                                    }),
                                 () -> {
                                     try {
                                         stmt.execute("DELETE FROM auth");
                                     } catch (SQLException e) {
-                                        System.out.println(e.getMessage());
+                                        Logger.getLogger(FitnessApp.class.getName()).log(Level.SEVERE,e.getMessage());
                                     }
                                     SwingUtilities.invokeLater(() -> new Login().setVisible(true));
                                     splashScreen.dispose();
@@ -106,7 +114,8 @@ public class FitnessApp {
                 SwingUtilities.invokeLater(() -> new Login().setVisible(true));
                 splashScreen.dispose();
             }
-        } catch (SQLException ex) {
+        } 
+        catch (SQLException ex) {
             Logger.getLogger(FitnessApp.class.getName()).log(Level.SEVERE, null, ex);
         }
 

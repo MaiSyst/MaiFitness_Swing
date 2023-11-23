@@ -42,7 +42,7 @@ import raven.toast.Notifications;
  *
  * @author orion90
  */
-public final class PlanningController {
+public final class PlanningController implements MaiState{
 
     private final JComboBox<String> filterDay;
     private final JComboBox<String> filterActivity;
@@ -333,4 +333,10 @@ public final class PlanningController {
                 maiState
         ).show();
     }
+
+    @Override
+    public void updateState(Object... args) {
+        refreshDataTable();
+    }
+    
 }

@@ -52,12 +52,12 @@ public final class UserModalController {
             String phone,
             String birthdate,
             String roomName,
-            
+            String username,
             final MaiFunctionCall callback) {
         this.callback = callback;
         this.fetch = fetch;
         usersModal = new UsersModal();
-        usersModal.getBtnAdded().addActionListener(l -> onHandleEditUser());
+        usersModal.getBtnAdded().addActionListener(l -> onHandleEditUser(username));
         usersModal.getBtnClose().addActionListener(l -> usersModal.dispose());
         usersModal.getTxtFirstname().setText(firstName);
         usersModal.getTxtLastname().setText(lastName);
@@ -79,7 +79,7 @@ public final class UserModalController {
     }
 
     private void onHandleAddNewUser() {
-        if (isInputBlank()) {
+        if (isInputBlank(false)) {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Verifier que si l'un des champs n'est pas vide.");
         } else {
             if (!getTextPassword(usersModal.getPassword())
@@ -121,8 +121,8 @@ public final class UserModalController {
         }
     }
   
-     private void onHandleEditUser() {
-        if (isInputBlank()) {
+     private void onHandleEditUser(String username) {
+        if (isInputBlank(true)) {
             Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Verifier que si l'un des champs n'est pas vide.");
         } else {
             if (!getTextPassword(usersModal.getPassword())
@@ -132,7 +132,6 @@ public final class UserModalController {
             } else {
                 try {
 
-                    var rand = (new Random()).nextInt(1000);
                     var room = (RoomWithSubscribeModel) usersModal.getComboxRoomModel().getSelectedItem();
                     Map<String, Object> body = new HashMap<>();
                     body.put("firstName", usersModal.getTxtFirstname().getText());
@@ -140,17 +139,17 @@ public final class UserModalController {
                     body.put("date", usersModal.getDatePicker().getText());
                     body.put("address", usersModal.getTxtAddress().getText());
                     body.put("phoneNumber", usersModal.getPhoneNumber().getText());
-                    body.put("username", usersModal.getTxtFirstname().getText() + "@" + rand);
-                    body.put("password", getTextPassword(usersModal.getPassword()));
+                    body.put("password", getTextPassword(usersModal.getPassword()).trim());
                     body.put("roomId", room.roomId());
-                    fetch.post(Constants.USER_UPDATE_URL_PATH, body).then((result, status) -> {
+                    fetch.put(Constants.USER_UPDATE_URL_PATH+"/"+username, body).then((result, status) -> {
                         if (status == ResponseStatusCode.OK) {
-                            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Un gérant été ajouté.");
+                            Notifications.getInstance().show(Notifications.Type.SUCCESS, Notifications.Location.TOP_RIGHT, "Un gérant été mise à jour.");
                             clearInput();
                             callback.invoked();
+                            usersModal.dispose();
                         } else {
                             if (result.toLowerCase().contains("duplicate")) {
-                                Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Cette salle est déjà gérée.");
+                                Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, "Un gérant gère cette salle.");
                             } else {
                                 Notifications.getInstance().show(Notifications.Type.ERROR, Notifications.Location.TOP_RIGHT, result);
                             }
@@ -164,7 +163,14 @@ public final class UserModalController {
         }
     }
 
-    private boolean isInputBlank() {
+    private boolean isInputBlank(boolean isEditing) {
+       if(isEditing){
+            return usersModal.getTxtFirstname().getText().isBlank()
+                || usersModal.getTxtAddress().getText().isBlank()
+                || usersModal.getTxtLastname().getText().isBlank()
+                || usersModal.getPhoneNumber().getText().isBlank()
+                || usersModal.getComboxRoomModel().getSelectedItem() == null;
+       }
         return usersModal.getTxtFirstname().getText().isBlank()
                 || usersModal.getTxtAddress().getText().isBlank()
                 || usersModal.getTxtLastname().getText().isBlank()

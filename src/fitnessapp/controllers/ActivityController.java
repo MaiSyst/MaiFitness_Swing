@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import java.util.List;
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
+import fitnessapp.utilities.MaiState;
 import java.awt.Color;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -29,6 +30,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -55,7 +57,7 @@ public class ActivityController {
     private final List<Integer> activityIdSelected = new ArrayList<>();
     private final Type activityListType = new TypeToken<List<ActivityModel>>() {
     }.getType();
-
+    private List<MaiState> states=new ArrayList<>();
     public ActivityController(final JFrame parent, final JButton addActivity, 
             final JTextField search,final JButton removeActivity, JTable table,
             final String token, final JLabel numberActvitiesSelectJLabel) {
@@ -208,7 +210,7 @@ public class ActivityController {
                     models.forEach(model
                             -> tableModel.addRow(new String[]{String.valueOf(model.activityId()), model.label(), model.description()})
                     );
-
+                    states.forEach(state->state.updateState());
                 }
             });
             changeSelectedItems();
@@ -220,5 +222,10 @@ public class ActivityController {
     private void onHandleShowModal() {
         new ActivityModalController(fetch, table, this::dataRefreshTable).show(parent);
     }
-
+   public void subscribe(MaiState ...state){
+        states.addAll(Arrays.asList(state));
+    }
+    public void unsubscribe(MaiState state){
+        states.remove(state);
+    }
 }
